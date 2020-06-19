@@ -1,3 +1,7 @@
+document.getElementById("stop_blocking")
+    .addEventListener("click", () => chrome.storage.sync.set({blocking: false}));
+
+
 const addTextToList = (list, text) => {
     const item = document.createElement("li");
     item.appendChild(document.createTextNode(text));
@@ -18,7 +22,7 @@ document.getElementById("add_button")
             }));
 
 
-chrome.storage.sync.get({"blocked_sites": []}, res => {
+chrome.storage.sync.get({blocked_sites: []}, res => {
     const list = document.createElement("ul");
     list.id = "blocked_list";
     for (const site of res.blocked_sites) {

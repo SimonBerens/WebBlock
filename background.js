@@ -1,5 +1,10 @@
+chrome.storage.sync.set({blocking: true});
+
 const blockTab = tab => {
-    alert(tab.url);
+    chrome.storage.sync.get({blocking: true}, res => {
+        if (res.blocking)
+            alert(tab.url);
+    })
 }
 
 chrome.tabs.onCreated.addListener(blockTab);
