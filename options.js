@@ -2,9 +2,17 @@ document.getElementById("stop_blocking")
     .addEventListener("click", () => chrome.storage.sync.set({blocking: false}));
 
 
-const addTextToList = (list, text) => {
+const addTextToHtmlListAndSync = (list, text) => {
     const item = document.createElement("li");
     item.appendChild(document.createTextNode(text));
+    item.addEventListener("click", () => {
+        chrome.storage.sync.get({blocked_sites: []}, res => {
+            const new_list = res.blocked_sites;
+            new_list.splice(new_list.indexOf(text), 1);
+            chrome.storage.sync.set({blocked_sites: new_list});
+        })
+        list.removeChild(item);
+    })
     list.appendChild(item);
 }
 
@@ -18,7 +26,7 @@ document.getElementById("add_button")
                 list.push(new_site);
                 chrome.storage.sync.set({blocked_sites: list});
                 const html_list = document.getElementById("blocked_list");
-                addTextToList(html_list, new_site);
+                addTextToHtmlListAndSync(html_list, new_site);
             }));
 
 
@@ -26,7 +34,7 @@ chrome.storage.sync.get({blocked_sites: []}, res => {
     const list = document.createElement("ul");
     list.id = "blocked_list";
     for (const site of res.blocked_sites) {
-        addTextToList(list, site);
+        addTextToHtmlListAndSync(list, site);
     }
     document.getElementById("blocked_list_container").appendChild(list);
 })
