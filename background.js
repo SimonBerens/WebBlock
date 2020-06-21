@@ -12,3 +12,6 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     blockTab(tab);
 })
+
+// only alarm is temp unblock
+chrome.alarms.onAlarm.addListener(alarm => chrome.storage.sync.set({blocking: true}));
