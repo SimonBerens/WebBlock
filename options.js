@@ -1,6 +1,9 @@
-import {addOnClick, getFields, setFields} from "./utils.js";
+import {addOnClick, getFields, setFields, changeBlockingAndRedirectCurTab} from "./utils.js";
 
-addOnClick("stop_blocking", () => setFields({blocking: false}));
+addOnClick("stop_blocking", () => {
+    changeBlockingAndRedirectCurTab(false);
+    chrome.alarms.clearAll();
+});
 
 
 const addTextToHtmlListAndSync = (list, text) => {
