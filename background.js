@@ -1,7 +1,8 @@
 import {blockTab} from "./block.js";
+import {setFields} from "./utils.js";
 
 // start blocking on startup
-chrome.storage.sync.set({blocking: true});
+setFields({blocking: true});
 
 chrome.tabs.onCreated.addListener(blockTab);
 
@@ -14,4 +15,4 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 })
 
 // only alarm is temp unblock
-chrome.alarms.onAlarm.addListener(alarm => chrome.storage.sync.set({blocking: true}));
+chrome.alarms.onAlarm.addListener(alarm => setFields({blocking: true}));
