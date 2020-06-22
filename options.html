@@ -7,9 +7,11 @@
 <body>
 <button id="stop_blocking"> Stop Blocking :(</button>
 <p>Click on a URL to remove it</p>
+<p>A URL <em>u</em> is blocked iff one of the urls in the list below is a prefix of <em>u</em> (this means the https://
+    and www are necessary) </p>
 <div id="blocked_list_container"></div>
 <input id="new_site" type="text">
-<button id="add_button"> Block Another Site </button>
+<button id="add_button"> Block Another Site</button>
 <script type="module" src="options.js"></script>
 </body>
 </html>
