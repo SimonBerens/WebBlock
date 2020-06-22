@@ -32,7 +32,9 @@ addOnClick("add_button", () => getFields({blocked_sites: []},
 }));
 
 
-getFields({blocked_sites: []}, res => {
+getFields({blocked_sites: [], enable_on_startup: true}, res => {
+    document.getElementById("enable_on_startup_checkbox").checked = res.enable_on_startup;
+
     const list = document.createElement("ul");
     list.id = "blocked_list";
     for (const site of res.blocked_sites)
@@ -40,5 +42,4 @@ getFields({blocked_sites: []}, res => {
     document.getElementById("blocked_list_container").appendChild(list);
 });
 
-
-
+addOnClick("enable_on_startup_checkbox", event => setFields({enable_on_startup: event.target.checked}));
