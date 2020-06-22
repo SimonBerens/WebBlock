@@ -14,11 +14,11 @@ const addTextToHtmlListAndSync = (list, text) => {
             const new_list = res.blocked_sites;
             new_list.splice(new_list.indexOf(text), 1);
             setFields({blocked_sites: new_list});
-        })
+        });
         list.removeChild(item);
-    })
+    });
     list.appendChild(item);
-}
+};
 
 
 addOnClick("add_button", () => getFields({blocked_sites: []},
@@ -38,7 +38,7 @@ getFields({blocked_sites: []}, res => {
     for (const site of res.blocked_sites)
         addTextToHtmlListAndSync(list, site);
     document.getElementById("blocked_list_container").appendChild(list);
-})
+});
 
 
 

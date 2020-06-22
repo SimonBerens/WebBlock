@@ -7,5 +7,5 @@ export const blockUnblockTab = tab => {
             const url_obj = new URL(tab.url);
             chrome.tabs.update(tab.id, {url: url_obj.searchParams.get("dest")});
         }
-    })
-}
+    });
+};
