@@ -1,7 +1,7 @@
-import {addOnClick, getFields, setFields, changeBlockingAndRedirectCurTab} from "./utils.js";
+import {addOnClick, getFields, setFields, setBlocking} from "./utils.js";
 
 addOnClick("stop_blocking", () => {
-    changeBlockingAndRedirectCurTab(false);
+    setBlocking(false);
     chrome.alarms.clearAll();
 });
 

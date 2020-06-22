@@ -1,8 +1,8 @@
 import {blockUnblockTab} from "./block.js";
-import {changeBlockingAndRedirectCurTab} from "./utils.js";
+import {setBlocking} from "./utils.js";
 
 // start blocking on startup
-changeBlockingAndRedirectCurTab(true);
+setBlocking(true);
 
 chrome.tabs.onCreated.addListener(blockUnblockTab);
 
@@ -11,4 +11,4 @@ chrome.tabs.onActivated.addListener(activeInfo => chrome.tabs.get(activeInfo.tab
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => blockUnblockTab(tab));
 
 // only alarm is temp unblock
-chrome.alarms.onAlarm.addListener(alarm => changeBlockingAndRedirectCurTab(true));
+chrome.alarms.onAlarm.addListener(alarm => setBlocking(true));
