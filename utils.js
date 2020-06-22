@@ -9,5 +9,5 @@ export const setFields = chrome.storage.sync.set.bind(chrome.storage.sync);
 
 export const setBlocking = new_blocking_state => {
     setFields({blocking: new_blocking_state});
-    chrome.tabs.query({active: true}, tabs => blockUnblockTab(tabs[0]))
+    chrome.tabs.query({active: true}, tabs => blockUnblockTab(tabs[0]));
 };
