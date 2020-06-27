@@ -2,7 +2,7 @@ import {addOnClick, getFields, setFields, setBlocking} from "./utils.js";
 
 addOnClick("stop_blocking", () => {
     setBlocking(false);
-    chrome.alarms.clearAll();
+    chrome.alarms.clear("temp_unblock_over");
 });
 
 

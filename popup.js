@@ -1,4 +1,4 @@
-import {addOnClick, setBlocking, getFields} from "./utils.js";
+import {addOnClick, getFields, setBlocking} from "./utils.js";
 
 const setBlockingAndBgColor = blocking => {
     setBlocking(blocking);
@@ -11,9 +11,10 @@ addOnClick("go_to_options", () => chrome.tabs.create({url: chrome.runtime.getURL
 
 addOnClick("temp_stop_blocking_button", () => {
     const minutes = parseInt(document.getElementById("temp_stop_blocking_input").value);
-    chrome.alarms.clearAll();
-    chrome.alarms.create({delayInMinutes: minutes});
-    setBlockingAndBgColor(false);
+    chrome.alarms.clear("temp_unblock_over", () => {
+        chrome.alarms.create("temp_unblock_over", {delayInMinutes: minutes});
+        setBlockingAndBgColor(false);
+    });
 });
 
 getFields({blocking: true}, res => setBlockingAndBgColor(res.blocking));
