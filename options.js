@@ -1,4 +1,4 @@
-import {addOnClick, getFields, setFields, setBlocking} from "./utils.js";
+import {addOnClick, getFields, setFields, setBlocking, addEventListener} from "./utils.js";
 
 addOnClick("stop_blocking", () => {
     setBlocking(false);
@@ -45,7 +45,7 @@ getFields({blocked_sites: [], enable_on_startup: true}, res => {
 
 addOnClick("enable_on_startup_checkbox", event => setFields({enable_on_startup: event.target.checked}));
 
-document.getElementById("import_from_csv").addEventListener("change", async event => {
+addEventListener("import_from_csv", "change", async event => {
     const csv_str = await event.target.files[0].text();
     const lines = csv_str.split(/\r\n|\n/);
     const urls = [];
@@ -57,3 +57,6 @@ document.getElementById("import_from_csv").addEventListener("change", async even
         setFields({blocked_sites: res.blocked_sites});
     });
 });
+
+addEventListener("custom_redirect", "change", event =>
+    setFields({redirect: event.target.value? event.target.value: ""}));
