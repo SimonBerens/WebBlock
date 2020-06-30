@@ -1,0 +1,21 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+.centered {
+    text-align: center;
+}
+
+li:hover {
+    text-decoration: line-through;
+    text-decoration-color: red;
+    color: red;
+}
+
+#options_container {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 5px 0;
+}

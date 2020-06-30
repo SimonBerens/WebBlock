@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Options</title>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-    </style>
+    <link rel="stylesheet" href="options.css">
 </head>
 <body>
 <button id="stop_blocking"> Stop Blocking :(</button>
 <div id="options_container">
-    Start Blocking on Startup: <input id="enable_on_startup_checkbox" type="checkbox">
-    <br>
-    Custom Redirect (cancels redirect on unblock): <input id="custom_redirect" type="text">
+    <div>
+        Start Blocking on Startup: <input id="enable_on_startup_checkbox" type="checkbox">
+    </div>
+    <div>
+        Custom Redirect (cancels redirect on unblock): <input id="custom_redirect" type="text">
+    </div>
 </div>
 
 <p>A URL <em>u</em> is blocked iff one of the urls in the list below is a prefix of <em>u</em> (this means the https://
@@ -26,8 +24,8 @@
         <th> Always Blocked List</th>
     </tr>
     <tr>
-        <td colspan="2">
-            <p>Import URLs [separated by space and/or commas] from file </p>
+        <td colspan="2" class="centered">
+            <p><strong>Import URLs [separated by space and/or commas] from file</strong> </p>
         </td>
     </tr>
     <tr>
@@ -35,8 +33,8 @@
         <td><input id="perm_import_from_csv" type="file" accept="text/csv"></td>
     </tr>
     <tr>
-        <td colspan="2">
-            <p>Click on a URL to remove it</p>
+        <td colspan="2" class="centered">
+            <p><strong>Click on a URL to remove it</strong></p>
         </td>
     </tr>
     <tr>
