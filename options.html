@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Options</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
 <button id="stop_blocking"> Stop Blocking :(</button>
@@ -11,14 +17,48 @@
     <br>
     Custom Redirect (cancels redirect on unblock): <input id="custom_redirect" type="text">
 </div>
-<p>Import URLs [separated by space and/or commas] from file </p>
-<input id="import_from_csv" type="file" accept="text/csv">
-<p>Click on a URL to remove it</p>
+
 <p>A URL <em>u</em> is blocked iff one of the urls in the list below is a prefix of <em>u</em> (this means the https://
     and www are necessary) </p>
-<div id="blocked_list_container"></div>
-<input id="new_site" type="text">
-<button id="add_button"> Block Another Site</button>
+<table>
+    <tr>
+        <th> Toggleable List</th>
+        <th> Always Blocked List</th>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>Import URLs [separated by space and/or commas] from file </p>
+        </td>
+    </tr>
+    <tr>
+        <td><input id="import_from_csv" type="file" accept="text/csv"></td>
+        <td><input id="perm_import_from_csv" type="file" accept="text/csv"></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>Click on a URL to remove it</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="blocked_list_container"></div>
+        </td>
+        <td>
+            <div id="perm_blocked_list_container"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input id="new_site" type="text">
+            <button id="add_button"> Block Another Site</button>
+        </td>
+        <td>
+            <input id="perm_new_site" type="text">
+            <button id="perm_add_button"> Block Another Site</button>
+        </td>
+    </tr>
+</table>
+<br>
 <script type="module" src="options.js"></script>
 </body>
 </html>
