@@ -1,0 +1,13 @@
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 400px;
+}
+
+.flex-item {
+    margin: 5px;
+}
+
+#temp_stop_blocking_button {
+    margin: 0;
+}

@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Popup</title>
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-<button id="start_blocking">Start Blocking!</button>
-<div id="temp_stop_blocking_container">
+<button id="start_blocking" class="flex-item">Start Blocking!</button>
+<div id="temp_stop_blocking_container" class="flex-item">
     <button id="temp_stop_blocking_button"> Stop Blocking For: </button>
-    <input id="temp_stop_blocking_input" type="number"> minutes
+    <input id="temp_stop_blocking_input" type="number"> <strong>minutes</strong>
 </div>
-<button id="go_to_options">Options</button>
+<button id="go_to_options" class="flex-item">Options</button>
 <script type="module" src="popup.js"></script>
 </body>
 </html>
