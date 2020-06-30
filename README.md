@@ -7,3 +7,5 @@ A better website blocker for chrome
 * Pick up where you left off - when you turn blocking off, blocked tabs will be redirected to where you were going innitially
 * Import URLs from file
 * Unblock for periods of time
+* Custom redirection
+* Separate lists - an always blocking list, and a toggleable list
