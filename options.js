@@ -41,7 +41,7 @@ const addToHTMLBlockedList = (list_id, ...sites) => {
 
 
 for (const prefix of ["", "perm_"]) {
-    
+
     const listId = prefix + "blocked_sites";
     getFields(createKVObj(listId, []), res => {
         const list = document.createElement("ul");
@@ -51,15 +51,19 @@ for (const prefix of ["", "perm_"]) {
     });
 
 
+    addEventListener(prefix + "new_site", "keyup", event => {
+        if (event.keyCode === 13) document.getElementById(prefix + "add_button").click();
+    });
 
     addOnClick(prefix + "add_button", () => getFields(createKVObj(listId, []),
         res => {
-            const new_site = document.getElementById(prefix + "new_site").value;
-            
+            const input = document.getElementById(prefix + "new_site");
+            const new_site = input.value;
             const list = res[listId];
             list.push(new_site);
             setFields(createKVObj(listId, list));
             addToHTMLBlockedList(listId, new_site);
+            input.value = "";
         }));
 
 
