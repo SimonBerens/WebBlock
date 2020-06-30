@@ -1,4 +1,4 @@
-import {addOnClick, getFields, setBlocking} from "./utils.js";
+import {addOnClick, addEventListener, getFields, setBlocking} from "./utils.js";
 
 const setBlockingAndBgColor = blocking => {
     setBlocking(blocking);
@@ -15,6 +15,10 @@ addOnClick("temp_stop_blocking_button", () => {
         chrome.alarms.create("temp_unblock_over", {delayInMinutes: minutes});
         setBlockingAndBgColor(false);
     });
+});
+
+addEventListener("temp_stop_blocking_input", "keyup", event => {
+    if (event.keyCode === 13) document.getElementById("temp_stop_blocking_button").click();
 });
 
 getFields({blocking: true}, res => setBlockingAndBgColor(res.blocking));
