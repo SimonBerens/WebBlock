@@ -1,9 +1,9 @@
 import {getFields} from "./utils.js";
 
-const isPrefixOfURL = url => (site => url.indexOf(site) === 0);
+const isPrefixOfURL = (url: string) => ((site: string) => url.indexOf(site) === 0);
 const DEFAULT_REDIRECT = chrome.runtime.getURL("/images/thanosfailure.jpg");
 
-export const blockUnblockTab = tab => {
+export const blockUnblockTab = (tab: chrome.tabs.Tab) => {
     const isPrefixOfTabURL = isPrefixOfURL(tab.url);
 
     getFields({blocking: true, blocked_sites: [], perm_blocked_sites: [], redirect: ""}, res => {

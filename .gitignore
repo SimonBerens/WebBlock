@@ -1,1 +1,5 @@
 .idea/
+extension.zip
+built/
+build.sh
+node_modules
