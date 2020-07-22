@@ -6,56 +6,43 @@
     <link rel="stylesheet" href="options.css">
 </head>
 <body>
-<button id="stop_blocking"> Stop Blocking :(</button>
-<div id="options_container">
-    <div>
-        Start Blocking on Startup: <input id="enable_on_startup_checkbox" type="checkbox">
-    </div>
-    <div>
-        Custom Redirect (cancels redirect on unblock): <input id="custom_redirect" type="text">
-    </div>
+
+
+<button id="startAllBlocking" class="startBlockingButton"> Start All Blocking</button>
+<button id="stopAllBlocking" class="stopBlockingButton"> Stop All Blocking</button>
+
+<div id="blockedListListContainer">
+    <div id="addBlockedList" class="blockedListContainer"><h3>Click to Add a Blocked List</h3></div>
 </div>
 
-<p>A URL <em>u</em> is blocked iff one of the urls in the list below is a prefix of <em>u</em> (this means the https://
-    and www are necessary) </p>
-<table>
-    <tr>
-        <th> Toggleable List</th>
-        <th> Always Blocked List</th>
-    </tr>
-    <tr>
-        <td colspan="2" class="centered">
-            <p><strong>Import URLs [separated by space and/or commas] from file</strong> </p>
-        </td>
-    </tr>
-    <tr>
-        <td><input id="import_from_csv" type="file" accept="text/csv"></td>
-        <td><input id="perm_import_from_csv" type="file" accept="text/csv"></td>
-    </tr>
-    <tr>
-        <td colspan="2" class="centered">
-            <p><strong>Click on a URL to remove it</strong></p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div id="blocked_list_container"></div>
-        </td>
-        <td>
-            <div id="perm_blocked_list_container"></div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <input id="new_site" type="text">
-            <button id="add_button"> Block Another Site</button>
-        </td>
-        <td>
-            <input id="perm_new_site" type="text">
-            <button id="perm_add_button"> Block Another Site</button>
-        </td>
-    </tr>
-</table>
+<template id="blockedListTemplate">
+    <div class="blockedListContainer">
+        <span class="name blockedListItem" contenteditable="true"></span>
+        <button class="setBlockingButton blockedListItem"></button>
+        <div class="optionsContainer blockedListItem">
+            <strong> Options </strong>
+            <label class="enableOnStartupCheckboxLabel"> Start Blocking on Startup:
+                <!--                    todo test if clicking on label triggers event listener-->
+                <input class="enableOnStartupCheckbox" type="checkbox">
+            </label>
+<!--            todo link-->
+            <label>Custom Redirect:
+                <input class="customRedirectTextInput" type="text">
+            </label>
+        </div>
+<!--        todo make this nice and give tooltip for file format-->
+        <label class="importFromCsvLabel blockedListItem"> Import from file(s)...
+            <input class="importFromCsv" type="file" accept="text/csv">
+        </label>
+        <div class="blockedSitesContainer blockedListItem">
+            <ul class="blockedSites"></ul>
+        </div>
+        <input class="addBlockedSiteInput blockedListItem" type="text" placeholder="URL of site you want to block">
+        <button class="addBlockedSiteButton blockedListItem"> Add Blocked Site </button>
+        <button class="deleteListButton blockedListItem"> Delete List </button>
+    </div>
+</template>
+
 <br>
 <a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
 <br>

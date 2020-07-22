@@ -1,24 +1,86 @@
-import {addOnClick, addEventListener, getFields, setBlocking} from "./utils.js";
+import {
+    addOnClick,
+    getBlocked,
+    getThenSetBlocked, getThenSetBlockedCallback
+} from "./utils.js";
 
-const setBlockingAndBgColor = blocking => {
-    setBlocking(blocking);
-    document.body.style.backgroundColor = blocking? "green" : "red";
-};
+addOnClick("startAllBlocking", getThenSetBlockedCallback(async res => {
+    for (const [listId, blockedList] of Object.entries(res.blockedListList))
+        blockedList.isBlocking = true;
+}));
 
-addOnClick("start_blocking", () => setBlockingAndBgColor(true));
+addOnClick("goToOptions",
+    () => chrome.tabs.create({url: chrome.runtime.getURL("options.html")}));
 
-addOnClick("go_to_options", () => chrome.tabs.create({url: chrome.runtime.getURL("options.html")}));
+getBlocked(async res => {
+    const blockedListListContainer =
+        document.getElementById("blockedListListContainer") as HTMLDivElement;
+    const blockedListTemplate =
+        document.getElementById("blockedListTemplate") as HTMLTemplateElement;
 
-addOnClick("temp_stop_blocking_button", () => {
-    const minutes = parseInt((document.getElementById("temp_stop_blocking_input") as HTMLInputElement).value);
-    chrome.alarms.clear("temp_unblock_over", () => {
-        chrome.alarms.create("temp_unblock_over", {delayInMinutes: minutes});
-        setBlockingAndBgColor(false);
+    for (const [listId, blockedList] of Object.entries(res.blockedListList)) {
+
+        const blockedListTemplateClone = blockedListTemplate.content.cloneNode(true) as DocumentFragment;
+
+        const name = blockedListTemplateClone.querySelector(".name") as HTMLSpanElement;
+        name.innerHTML = blockedList.name;
+
+        const setBlockingButton =
+            blockedListTemplateClone.querySelector(".setBlockingButton") as HTMLButtonElement;
+        if (blockedList.isBlocking) {
+            setBlockingButton.innerText = "Blocking";
+            setBlockingButton.disabled = true;
+        } else {
+            setBlockingButton.innerText = "Start Blocking";
+            setBlockingButton.disabled = false;
+        }
+        setBlockingButton.addEventListener("click", getThenSetBlockedCallback(async res => {
+            res.blockedListList[listId].isBlocking = !res.blockedListList[listId].isBlocking;
+        }));
+
+        const tempUnblockNumberField =
+            blockedListTemplateClone.querySelector(".tempUnblockNumberField") as HTMLInputElement;
+        tempUnblockNumberField.style.width = "3em";
+
+        const tempUnblockButton =
+            blockedListTemplateClone.querySelector(".tempUnblockButton") as HTMLButtonElement;
+
+        tempUnblockNumberField.addEventListener("keyup", ev => {
+            if (ev.key === "Enter")
+                tempUnblockButton.click();
+        });
+
+        tempUnblockButton.addEventListener("click", getThenSetBlockedCallback(async res => {
+            res.blockedListList[listId].isBlocking = false;
+            const mins = parseInt(tempUnblockNumberField.value);
+            chrome.alarms.create(listId, {delayInMinutes: mins});
+        }));
+
+        const timer =
+            blockedListTemplateClone.querySelector(".timer") as HTMLSpanElement;
+        chrome.alarms.get(listId, alarm => {
+            if (alarm) {
+                const foo = () => {
+                    let timeLeft =  alarm.scheduledTime - Date.now();
+                    const formattedTime = new Date(timeLeft).toISOString().substr(11, 8);
+                    timer.innerHTML = formattedTime;
+                    if (formattedTime === "00:00:00")
+                        clearInterval(interval);
+                };
+                foo(); // todo rename
+                const interval = setInterval(foo, 1000);
+            } else {
+                // remove parent div from blockedListContainer
+                timer.parentElement.parentElement.removeChild(timer.parentElement);
+            }
+        });
+
+        blockedListListContainer.appendChild(blockedListTemplateClone);
+    }
+})
+
+chrome.alarms.onAlarm.addListener(alarm => {
+    getThenSetBlocked(async res => {
+        res.blockedListList[alarm.name].isBlocking = true;
     });
 });
-
-addEventListener("temp_stop_blocking_input", "keyup", (event: KeyboardEvent) => {
-    if (event.keyCode === 13) document.getElementById("temp_stop_blocking_button").click();
-});
-
-getFields({blocking: true}, res => setBlockingAndBgColor(res.blocking));

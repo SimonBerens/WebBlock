@@ -1,24 +1,18 @@
-import {getFields} from "./utils.js";
+import {getFields, BlockedList, BlockedListListRes, getBlocked} from "./utils.js";
 
 const isPrefixOfURL = (url: string) => ((site: string) => url.indexOf(site) === 0);
 const DEFAULT_REDIRECT = chrome.runtime.getURL("/images/thanosfailure.jpg");
-
+// todo set default redirect
 export const blockUnblockTab = (tab: chrome.tabs.Tab) => {
     const isPrefixOfTabURL = isPrefixOfURL(tab.url);
 
-    getFields({blocking: true, blocked_sites: [], perm_blocked_sites: [], redirect: ""}, res => {
-        const in_perm_list = res.perm_blocked_sites.some(isPrefixOfTabURL);
-        if (in_perm_list || (res.blocking && res.blocked_sites.some(isPrefixOfTabURL))) {
-            const absURL = res.redirect ? res.redirect :
-                `${DEFAULT_REDIRECT}?dest=${tab.url}&perm=${in_perm_list}`;
-            chrome.tabs.update(tab.id, {url: absURL});
-        } else if (isPrefixOfTabURL(DEFAULT_REDIRECT)) {
-            const url_obj = new URL(tab.url);
-            const go = url_obj.searchParams.get("dest");
-            const perm_blocked = url_obj.searchParams.get("perm") === "true";
-            if ((perm_blocked && !res.perm_blocked_sites.some(isPrefixOfURL(go))) ||
-                (!perm_blocked && (!res.blocking || !res.blocked_sites.some(isPrefixOfURL(go)))))
-                chrome.tabs.update(tab.id, {url: go});
+
+    getBlocked(async res => {
+        for (const [listId, blockedList] of Object.entries(res.blockedListList)) {
+            if (blockedList.isBlocking && blockedList.blockedSites.some(isPrefixOfTabURL)) {
+                console.log(blockedList.customRedirect, blockedList.customRedirect ? blockedList.customRedirect : DEFAULT_REDIRECT);
+                chrome.tabs.update(tab.id, {url: blockedList.customRedirect ? blockedList.customRedirect : DEFAULT_REDIRECT});
+            }
         }
     });
 };

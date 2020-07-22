@@ -6,12 +6,27 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-<button id="start_blocking" class="flex-item">Start Blocking!</button>
-<div id="temp_stop_blocking_container" class="flex-item">
-    <button id="temp_stop_blocking_button"> Stop Blocking For: </button>
-    <input id="temp_stop_blocking_input" type="number"> <strong>minutes</strong>
-</div>
-<button id="go_to_options" class="flex-item">Options</button>
+<button id="startAllBlocking" class="setBlockingButton"> Start All Blocking </button>
+
+<div id="blockedListListContainer"></div>
+
+<template id="blockedListTemplate">
+    <div class="blockedListContainer">
+        <span class="name blockedListItem"></span>
+        <button class="setBlockingButton blockedListItem"></button>
+        <div class="tempUnblockContainer blockedListItem">
+            <button class="tempUnblockButton">Unblock for &nbsp;</button>
+            <input class="tempUnblockNumberField" type="number">
+            minutes
+        </div>
+        <div class="timerContainer blockedListItem">
+            Re-blocking in <span class="timer"></span>
+        </div>
+    </div>
+</template>
+
+<button id="goToOptions" class="flex-item">Options</button>
+
 <script type="module" src="popup.js"></script>
 </body>
 </html>
