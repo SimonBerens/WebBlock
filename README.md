@@ -8,7 +8,7 @@ A better website blocker for chrome
 * Import URLs from file
 * Unblock for periods of time
 * Custom redirection
-* Separate lists - an always blocking list, and a toggleable list
+* As many lists as you want!
 
 ### Build
 ```shell script

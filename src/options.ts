@@ -18,7 +18,7 @@ addOnClick("startAllBlocking", () => {
         for (const [id, blockedList] of Object.entries(res.blockedListList))
             blockedList.isBlocking = true;
     });
-    chrome.alarms.clearAll(); // todo maybe tell user?
+    chrome.alarms.clearAll();
 });
 
 addOnClick("stopAllBlocking", () => {

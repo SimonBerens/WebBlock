@@ -31,7 +31,7 @@ export const getThenSetBlocked = (modifyRes: (res: BlockedListListRes) => Promis
         chrome.tabs.query({active: true}, tabs => blockUnblockTab(tabs[0]));
         setFields({blockedListList: res.blockedListList});
     });
-    window.location.reload(); // todo better
+    window.location.reload();
 };
 
 

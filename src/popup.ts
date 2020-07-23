@@ -54,23 +54,23 @@ getBlocked(async res => {
         tempUnblockButton.addEventListener("click", getThenSetBlockedCallback(async res => {
             res.blockedListList[listId].isBlocking = false;
             const mins = parseInt(tempUnblockNumberField.value);
-            chrome.alarms.clear(listId);
-            chrome.alarms.create(listId, {delayInMinutes: mins});
+            chrome.alarms.clear(listId, wasCleared =>
+                chrome.alarms.create(listId, {delayInMinutes: mins}));
         }));
 
         const timer =
             blockedListTemplateClone.querySelector(".timer") as HTMLSpanElement;
         chrome.alarms.get(listId, alarm => {
             if (alarm) {
-                const foo = () => {
+                const updateTimer = () => {
                     let timeLeft =  alarm.scheduledTime - Date.now();
                     const formattedTime = new Date(timeLeft).toISOString().substr(11, 8);
                     timer.innerHTML = formattedTime;
                     if (formattedTime === "00:00:00")
                         clearInterval(interval);
                 };
-                foo(); // todo rename
-                const interval = setInterval(foo, 1000);
+                updateTimer();
+                const interval = setInterval(updateTimer, 1000);
             } else {
                 // remove parent div from blockedListContainer
                 timer.parentElement.parentElement.removeChild(timer.parentElement);
@@ -79,10 +79,4 @@ getBlocked(async res => {
 
         blockedListListContainer.appendChild(blockedListTemplateClone);
     }
-})
-
-chrome.alarms.onAlarm.addListener(alarm => {
-    getThenSetBlocked(async res => {
-        res.blockedListList[alarm.name].isBlocking = true;
-    });
 });

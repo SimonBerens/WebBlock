@@ -19,3 +19,9 @@ chrome.tabs.onActivated.addListener(activeInfo =>
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
     blockUnblockTab(tab));
+
+chrome.alarms.onAlarm.addListener(alarm => {
+    getThenSetBlocked(async res => {
+        res.blockedListList[alarm.name].isBlocking = true;
+    });
+});
