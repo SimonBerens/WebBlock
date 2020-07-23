@@ -36,6 +36,7 @@ getBlocked(async res => {
         }
         setBlockingButton.addEventListener("click", getThenSetBlockedCallback(async res => {
             res.blockedListList[listId].isBlocking = !res.blockedListList[listId].isBlocking;
+            chrome.alarms.clear(listId);
         }));
 
         const tempUnblockNumberField =
@@ -53,6 +54,7 @@ getBlocked(async res => {
         tempUnblockButton.addEventListener("click", getThenSetBlockedCallback(async res => {
             res.blockedListList[listId].isBlocking = false;
             const mins = parseInt(tempUnblockNumberField.value);
+            chrome.alarms.clear(listId);
             chrome.alarms.create(listId, {delayInMinutes: mins});
         }));
 

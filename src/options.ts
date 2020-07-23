@@ -4,7 +4,6 @@ import {
     getThenSetBlocked,
     getThenSetBlockedCallback,
 } from "./utils.js";
-import set = Reflect.set;
 
 // https://gist.github.com/jed/982883
 const uuid4 = (): string => {
@@ -89,6 +88,7 @@ getBlocked(async res => {
         }
         setBlockingButton.addEventListener("click", getThenSetBlockedCallback(async res => {
             res.blockedListList[listId].isBlocking = !res.blockedListList[listId].isBlocking;
+            chrome.alarms.clear(listId);
         }));
 
         const enableOnStartupCheckbox =
