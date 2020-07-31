@@ -2,6 +2,6 @@
   "compilerOptions": {
     "outDir": "./built",
     "allowJs": true,
-    "target": "es6"
+    "target": "es2017"
   }
 }
