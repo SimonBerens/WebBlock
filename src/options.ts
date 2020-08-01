@@ -3,6 +3,7 @@ import {
     getBlocked,
     getThenSetBlocked,
     getThenSetBlockedCallback,
+    isValidUrl,
 } from "./utils.js";
 
 // https://gist.github.com/jed/982883
@@ -123,7 +124,9 @@ getBlocked(async res => {
                 const urls = [];
                 for (const line of lines)
                     urls.push(...line.split(",").filter(url => url.length !== 0));
-                res.blockedListList[listId].blockedSites.push(...urls);
+                if (!urls.every(isValidUrl))
+                    alert("Some URLs were detected to be invalid, make sure URLs start with http[s]://")
+                else res.blockedListList[listId].blockedSites.push(...urls);
             }
         }));
 
@@ -140,7 +143,9 @@ getBlocked(async res => {
 
         addBlockedSiteButton.addEventListener("click", getThenSetBlockedCallback(async res => {
             const url = addBlockedSiteInput.value;
-            res.blockedListList[listId].blockedSites.push(url);
+            if (!isValidUrl(url))
+                alert("URL was detected to be invalid, make sure URLs start with http[s]://")
+            else res.blockedListList[listId].blockedSites.push(url);
         }));
 
         const deleteListButton =

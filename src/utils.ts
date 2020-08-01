@@ -38,3 +38,12 @@ export const getThenSetBlocked = (modifyRes: (res: BlockedListListRes) => Promis
 export const getThenSetBlockedCallback = (modifyRes: (res: BlockedListListRes) => Promise<void>): () => void => {
     return () => getThenSetBlocked(modifyRes);
 };
+
+export const isValidUrl = (potentialUrl: string) : boolean => {
+    try {
+        new URL(potentialUrl);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
