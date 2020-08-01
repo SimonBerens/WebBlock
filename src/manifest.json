@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "WebBlock",
-  "version": "2",
+  "version": "2.0.1",
 
   "description": "Block distracting websites",
   "icons": {
