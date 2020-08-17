@@ -28,7 +28,7 @@ export const getBlocked = (callback: (res: BlockedListListRes) => Promise<void>)
 export const getThenSetBlocked = (modifyRes: (res: BlockedListListRes) => Promise<void>): void => {
     getBlocked(async res => {
         await modifyRes(res);
-        chrome.tabs.query({active: true}, tabs => blockUnblockTab(tabs[0]));
+        chrome.tabs.query({active: true}, tabs => tabs.forEach(blockUnblockTab));
         setFields({blockedListList: res.blockedListList});
     });
     window.location.reload();
