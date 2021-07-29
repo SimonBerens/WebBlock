@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Popup</title>
-    <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-<button id="startAllBlocking" class="setBlockingButton"> Start All Blocking </button>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <button id="startAllBlocking" class="setBlockingButton">
+      Start All Blocking
+    </button>
 
-<div id="blockedListListContainer"></div>
+    <div id="blockedListListContainer"></div>
 
-<template id="blockedListTemplate">
-    <div class="blockedListContainer">
+    <template id="blockedListTemplate">
+      <div class="blockedListContainer">
         <span class="name blockedListItem"></span>
         <button class="setBlockingButton blockedListItem"></button>
         <div class="tempUnblockContainer blockedListItem">
-            <button class="tempUnblockButton">Unblock for &nbsp;</button>
-            <input class="tempUnblockNumberField" type="number">
-            minutes
+          <button class="tempUnblockButton">Unblock for &nbsp;</button>
+          <input class="tempUnblockNumberField" type="number" />
+          minutes
+        </div>
+        <div class="tempUnblockContainer">
+          <button class="fiveMinButton">5m</button>
+          <button class="tenMinButton">10m</button>
+          <button class="thirtyMinButton">30m</button>
+          <button class="oneHourButton">1h</button>
+          <button class="twelveHourButton">12h</button>
         </div>
         <div class="timerContainer blockedListItem">
-            Re-blocking in <span class="timer"></span>
+          Re-blocking in <span class="timer"></span>
         </div>
-    </div>
-</template>
+      </div>
+    </template>
 
-<button id="goToOptions" class="flex-item">Options</button>
+    <button id="goToOptions" class="flex-item">Options</button>
 
-<script type="module" src="popup.js"></script>
-</body>
+    <script type="module" src="popup.js"></script>
+  </body>
 </html>
