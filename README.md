@@ -12,6 +12,7 @@ A better website blocker for chrome
 
 ### Build
 ```shell script
+postcss src/*.css --base src --dir build
 tsc
 cp -R src/* built/
 rm built/*.ts
