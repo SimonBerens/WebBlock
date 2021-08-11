@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "WebBlock",
   "version": "2.0.3",
 
@@ -10,16 +10,17 @@
     "128": "images/logo128.png"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": {},
     "default_title": "WebBlock",
     "default_popup": "popup.html"
   },
 
   "background": {
-    "persistent": false,
-    "page": "background.html"
+    "service_worker": "background.js",
+    "type": "module"
   },
+  "minimum_chrome_version": "92",
   "options_page": "options.html",
   "permissions": ["storage", "tabs", "alarms"]
 }
