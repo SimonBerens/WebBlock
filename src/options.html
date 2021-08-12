@@ -7,38 +7,12 @@
 </head>
 <body>
 
+<div id="add-to-blocked-list">
 
-<button id="startAllBlocking" class="startBlockingButton"> Start All Blocking</button>
-<button id="stopAllBlocking" class="stopBlockingButton"> Stop All Blocking</button>
-
-<div id="blockedListListContainer">
-    <div id="addBlockedList" class="blockedListContainer"><h3>Click to Add a Blocked List</h3></div>
 </div>
+<div id="blocked-list">
 
-<template id="blockedListTemplate">
-    <div class="blockedListContainer">
-        <span class="name blockedListItem" contenteditable="true"></span>
-        <button class="setBlockingButton blockedListItem"></button>
-        <div class="optionsContainer blockedListItem">
-            <strong> Options </strong>
-            <label class="enableOnStartupCheckboxLabel"> Start Blocking on Startup:
-                <input class="enableOnStartupCheckbox" type="checkbox">
-            </label>
-            <label>Custom Redirect:
-                <input class="customRedirectTextInput" type="text">
-            </label>
-        </div>
-        <label class="importFromCsvLabel blockedListItem"> Import from file(s)...
-            <input class="importFromCsv" type="file" accept="text/csv">
-        </label>
-        <div class="blockedSitesContainer blockedListItem">
-            <ul class="blockedSites"></ul>
-        </div>
-        <input class="addBlockedSiteInput blockedListItem" type="text" placeholder="URL of site you want to block">
-        <button class="addBlockedSiteButton blockedListItem"> Add Blocked Site </button>
-        <button class="deleteListButton blockedListItem"> Delete List </button>
-    </div>
-</template>
+</div>
 
 <br>
 <a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
