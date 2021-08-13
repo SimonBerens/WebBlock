@@ -8,11 +8,19 @@
 <body>
 
 <div id="add-to-blocked-list">
-
+    <input id="url-to-add" type="text">
+    <button id="add-to-blocked-list-button">Add</button>
 </div>
-<div id="blocked-list">
+<br>
 
-</div>
+<ul id="blocked-list">
+</ul>
+
+<template id="blocked-item-template">
+    <li>
+        <span class="blocked-url"></span>
+    </li>
+</template>
 
 <br>
 <a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
