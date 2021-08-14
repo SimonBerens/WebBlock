@@ -6,24 +6,8 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-<button id="startAllBlocking" class="setBlockingButton"> Start All Blocking </button>
 
-<div id="blockedListListContainer"></div>
-
-<template id="blockedListTemplate">
-    <div class="blockedListContainer">
-        <span class="name blockedListItem"></span>
-        <button class="setBlockingButton blockedListItem"></button>
-        <div class="tempUnblockContainer blockedListItem">
-            <button class="tempUnblockButton">Unblock for &nbsp;</button>
-            <input class="tempUnblockNumberField" type="number">
-            minutes
-        </div>
-        <div class="timerContainer blockedListItem">
-            Re-blocking in <span class="timer"></span>
-        </div>
-    </div>
-</template>
+<div id="popup-timer-div"></div>
 
 <button id="goToOptions" class="flex-item">Options</button>
 

@@ -1,6 +1,6 @@
 const timerDiv = document.getElementById("timer-div");
 const countdownMinutes = 0.1;
-const reblockMinutes = 60;
+const reblockMinutes = 0.1;
 
 let timeSet = Date.now();
 let replacing = false;
@@ -10,6 +10,8 @@ setInterval(async () => {
         .toISOString().substr(11, 8);
     if (timeLeft < 1000) {
         chrome.alarms.create("reblock", {delayInMinutes: reblockMinutes});
+        const reblockAlarm = await chrome.alarms.get("reblock");
+        await chrome.storage.local.set({reblockTime: reblockAlarm.scheduledTime, blocking: false});
         loadUnblocked();
     }
 });
