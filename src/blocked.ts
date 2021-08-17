@@ -1,6 +1,6 @@
 const timerDiv = document.getElementById("timer-div");
-const countdownMinutes = 0.1;
-const reblockMinutes = 0.1;
+const countdownMinutes = 2;
+const reblockMinutes = 60;
 
 let timeSet = Date.now();
 let replacing = false;
