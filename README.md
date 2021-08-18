@@ -12,10 +12,7 @@ A better website blocker for chrome
 
 ### Build
 ```shell script
-tsc
-cp -R src/* built/
-rm built/*.ts
-postcss src/*.css --base src --dir build
+./build.sh
 ```
 Now the `./built/` can be used as an extension, 
 either from Load Unpacked or by zipping it and publishing to the Chrome Web Store 
