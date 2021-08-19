@@ -1,12 +1,14 @@
-import {BlockedList, StoredBlockedList} from "./utils";
+import {setData, StoredData, useData} from "./utils.js";
 
 
 chrome.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === "reblock") {
-        chrome.storage.local.set({blocking: true});
+        useData(async oldData => {
+            await setData({...oldData, blocking: true})
+        })
         let queryOptions = { active: true, currentWindow: true };
         let [tab] = await chrome.tabs.query(queryOptions);
-        blockUnblockTab(tab);
+        await blockUnblockTab(tab);
     }
 });
 
@@ -19,8 +21,7 @@ export const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     // todo rearrange/inline vars
     const isPrefixOfTabURL = isPrefixOfURL(tab.url);
     let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
-
-    chrome.storage.local.get({blocking: true, blockedList: []}, ({blocking, blockedList} : {blockedList: BlockedList, blocking: boolean}) => {
+    useData( ({blocking, blockedList}) => {
         if (blocking && blockedList.some(blockedItem => isPrefixOfTabURL(blockedItem.urlPrefix))) {
             chrome.tabs.update(tab.id, {url: redirect});
         }

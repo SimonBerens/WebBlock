@@ -1,14 +1,17 @@
-import {BlockedList, StoredBlockedList} from "./utils";
+import {BlockedList, Data, setData, useData} from "./utils.js";
 
 async function setList(newList: BlockedList) {
-    await chrome.storage.local.set({"blockedList": newList});
-    window.location.reload();
+    useData(async oldData => {
+        await setData({...oldData, blockedList: newList});
+        window.location.reload();
+    });
 }
-const button = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
+const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
 const url = document.getElementById("url-to-add") as HTMLInputElement;
-chrome.storage.local.get({"blockedList": []}, ({blockedList} : {blockedList: BlockedList})  => {
 
-    button.addEventListener("click", async () =>
+useData(({blockedList}) => {
+
+    addToBlockedListButton.addEventListener("click", async () =>
         setList([...blockedList, {urlPrefix: url.value}])
     );
 
