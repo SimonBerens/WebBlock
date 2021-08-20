@@ -24,10 +24,8 @@ useData(data => {
         window.location.replace(dest);
     }
 
-    document.addEventListener("visibilitychange", async () => {
-        if (document.visibilityState === "hidden" && !replacing) {
-            const tab = await chrome.tabs.getCurrent();
-            setTimeout(() => chrome.tabs.remove(tab.id), 1);
-        }
+    window.addEventListener("blur", async () => {
+        const tab = await chrome.tabs.getCurrent();
+        setTimeout(() => chrome.tabs.remove(tab.id), 1);
     });
 });
