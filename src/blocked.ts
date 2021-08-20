@@ -1,8 +1,8 @@
 import {setData, useData} from "./utils.js";
 
-const timerDiv = document.getElementById("timer-div");
-
 useData(data => {
+
+    const timerDiv = document.getElementById("timer-div");
 
     let timeSet = Date.now();
     let replacing = false;
@@ -28,4 +28,6 @@ useData(data => {
         const tab = await chrome.tabs.getCurrent();
         setTimeout(() => chrome.tabs.remove(tab.id), 1);
     });
+
+    (document.getElementById("suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions;
 });

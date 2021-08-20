@@ -44,6 +44,14 @@ useData(data => {
         await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
     })
 
+    const suggestedActions = document.getElementById("suggested-actions") as HTMLTextAreaElement;
+    suggestedActions.value = data.suggestedActions;
+    suggestedActions.addEventListener("blur", async () => {
+        const newActions = suggestedActions.value;
+        await setData({...data, suggestedActions: newActions});
+    })
+
+
     const blockedList = data.blockedList;
 
     const url = document.getElementById("url-to-add") as HTMLInputElement;

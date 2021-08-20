@@ -10,6 +10,7 @@ export interface Data {
     countdownLengthMinutes: number,
     reblockLengthMinutes: number,
     reblockingAt: number,
+    suggestedActions: string
 }
 
 export interface StoredData {
@@ -28,6 +29,7 @@ export const useData = (f: (data: Data) => void) => {
                 countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
                 reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
                 reblockingAt: Date.now(),
+                suggestedActions: ""
             }
         } as StoredData,
         ({data} : StoredData) => f(data));
