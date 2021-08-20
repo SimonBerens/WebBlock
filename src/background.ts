@@ -1,4 +1,4 @@
-import {setData, StoredData, useData} from "./utils.js";
+import {setData, useData} from "./utils.js";
 
 
 chrome.alarms.onAlarm.addListener(async alarm => {
@@ -28,6 +28,14 @@ export const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     });
 
 };
+
+const blockOnExtensionStartup = (): void => {
+    useData(data => setData({...data, blocking: true}));
+};
+
+
+chrome.runtime.onStartup.addListener(blockOnExtensionStartup);
+chrome.runtime.onInstalled.addListener(blockOnExtensionStartup);
 
 
 chrome.tabs.onCreated.addListener(blockUnblockTab);
