@@ -6,8 +6,7 @@ document.getElementById("goToOptions").addEventListener("click",
 const popupTimerDiv = document.getElementById("popup-timer-div");
 
 
-useData(
-    ({blocking, reblockingAt}) => {
+useData(({blocking, reblockingAt}) => {
     if (!blocking) {
         const interval = setInterval(async () => {
             const timeLeft = reblockingAt - Date.now();
