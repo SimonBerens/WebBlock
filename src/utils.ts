@@ -16,14 +16,17 @@ export interface StoredData {
     data: Data
 }
 
+export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
+export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
+
 export const useData = (f: (data: Data) => void) => {
     chrome.storage.local.get(
         {
             data: {
                 blockedList: [],
                 blocking: true,
-                countdownLengthMinutes: 2,
-                reblockLengthMinutes: 60,
+                countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
+                reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
                 reblockingAt: Date.now(),
             }
         } as StoredData,

@@ -21,5 +21,3 @@ useData(({blocking, reblockingAt}) => {
         popupTimerDiv.innerHTML = "blocking";
     }
 });
-
-

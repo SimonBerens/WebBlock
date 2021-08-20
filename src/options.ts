@@ -1,4 +1,11 @@
-import {BlockedList, Data, setData, useData} from "./utils.js";
+import {
+    BlockedList,
+    Data,
+    DEFAULT_COUNTDOWN_LENGTH_MINUTES,
+    DEFAULT_REBLOCK_LENGTH_MINUTES,
+    setData,
+    useData
+} from "./utils.js";
 
 async function setList(newList: BlockedList) {
     useData(async oldData => {
@@ -6,13 +13,45 @@ async function setList(newList: BlockedList) {
         window.location.reload();
     });
 }
-const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
-const url = document.getElementById("url-to-add") as HTMLInputElement;
 
-useData(({blockedList}) => {
 
-    addToBlockedListButton.addEventListener("click", async () =>
-        setList([...blockedList, {urlPrefix: url.value}])
+useData(data => {
+    // todo clean up variable names
+
+    const x = document.getElementById("countdown-minutes") as HTMLInputElement;
+    x.value = data.countdownLengthMinutes.toString();
+    x.addEventListener("blur", async () => {
+        const newCountdownLengthMinutes = parseInt(x.value);
+        if (isNaN(newCountdownLengthMinutes)) return;
+        if (newCountdownLengthMinutes < 1) {
+            alert("Countdown must be at least 1 minute long");
+            x.value = DEFAULT_COUNTDOWN_LENGTH_MINUTES.toString();
+            return;
+        }
+        await setData({...data, countdownLengthMinutes: newCountdownLengthMinutes});
+    })
+
+    const y = document.getElementById("reblock-minutes") as HTMLInputElement;
+    y.value = data.reblockLengthMinutes.toString();
+    y.addEventListener("blur", async () => {
+        const newReblockLengthMinutes = parseInt(y.value);
+        if (isNaN(newReblockLengthMinutes)) return;
+        if (newReblockLengthMinutes > 180) {
+            alert("Cannot unblock for more than 3 hours");
+            y.value = DEFAULT_REBLOCK_LENGTH_MINUTES.toString();
+            return;
+        }
+        await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
+    })
+
+    const blockedList = data.blockedList;
+
+    const url = document.getElementById("url-to-add") as HTMLInputElement;
+    const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
+    addToBlockedListButton.addEventListener("click", async () => {
+        if (url.value !== "")
+            await setList([...blockedList, {urlPrefix: url.value}])
+        }
     );
 
     const domList = document.getElementById("blocked-list") as HTMLDivElement;
@@ -23,7 +62,7 @@ useData(({blockedList}) => {
         const bu = bi.querySelector(".blocked-url") as HTMLSpanElement;
         bu.innerHTML = blockedItem.urlPrefix;
         bu.addEventListener("click", () =>
-            setList(blockedList.filter(x => x!==blockedItem))
+            setList(blockedList.filter(x => x !== blockedItem))
         );
 
         domList.appendChild(bi);
