@@ -22,5 +22,8 @@
   },
   "minimum_chrome_version": "92",
   "options_page": "options.html",
-  "permissions": ["storage", "tabs", "alarms"]
+  "permissions": ["storage", "tabs", "alarms"],
+  "chrome_url_overrides" : {
+    "newtab": "suggested.html"
+  }
 }
