@@ -32,7 +32,7 @@ export const useData = (f: (data: Data) => void) => {
                 suggestedActions: ""
             }
         } as StoredData,
-        ({data} : StoredData) => f(data));
+        ({data}: StoredData) => f(data));
 }
 
 export const setData = async (data: Data) => {
