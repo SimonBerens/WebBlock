@@ -75,5 +75,11 @@ useData(data => {
 
         domList.appendChild(bi);
     });
+
+    const blockButton = document.getElementById("block-button") as HTMLButtonElement;
+    blockButton.addEventListener("click", async () => {
+        await setData({...data, blocking: true});
+        await chrome.alarms.clear("reblock");
+    });
 });
 
