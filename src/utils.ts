@@ -20,8 +20,8 @@ export interface StoredData {
 export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
 export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
-export const useData = (f: (data: Data) => void) => {
-    chrome.storage.local.get(
+export const getData = async () => {
+    const {data} = await chrome.storage.local.get(
         {
             data: {
                 blockedList: [],
@@ -31,8 +31,8 @@ export const useData = (f: (data: Data) => void) => {
                 reblockingAt: Date.now(),
                 suggestedActions: ""
             }
-        } as StoredData,
-        ({data}: StoredData) => f(data));
+        } as StoredData) as StoredData;
+    return data;
 }
 
 export const setData = async (data: Data) => {

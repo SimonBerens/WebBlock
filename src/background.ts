@@ -1,11 +1,9 @@
-import {setData, useData} from "./utils.js";
+import {setData, getData} from "./utils.js";
 
 
 chrome.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === "reblock") {
-        useData(async oldData => {
-            await setData({...oldData, blocking: true})
-        })
+        await setData({...(await getData()), blocking: true})
         let queryOptions = { active: true, currentWindow: true };
         let [tab] = await chrome.tabs.query(queryOptions);
         await blockUnblockTab(tab);
@@ -19,18 +17,17 @@ const isPrefixOfURL = (url: string) => ((site: string) => url.indexOf(site) === 
 // todo rename func
 export const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     // todo rearrange/inline vars
-    const isPrefixOfTabURL = isPrefixOfURL(tab.url);
+    const isPrefixOfTabURL = isPrefixOfURL(tab.url ?? '');
     let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
-    useData( ({blocking, blockedList}) => {
-        if (blocking && blockedList.some(blockedItem => isPrefixOfTabURL(blockedItem.urlPrefix))) {
-            chrome.tabs.update(tab.id, {url: redirect});
-        }
-    });
+    const {blocking, blockedList} = await getData();
+    if (blocking && blockedList.some(blockedItem => isPrefixOfTabURL(blockedItem.urlPrefix))) {
+        if (tab.id) chrome.tabs.update(tab.id, {url: redirect});
+    }
 
 };
 
-const blockOnExtensionStartup = (): void => {
-    useData(data => setData({...data, blocking: true}));
+const blockOnExtensionStartup = async () => {
+    setData({...(await getData()), blocking: true});
 };
 
 

@@ -1,4 +1,4 @@
-import {useData} from "./utils.js";
+import {getData} from "./utils.js";
 
-useData(data => (document.getElementById("suggested-suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions)
+getData().then(data => (document.getElementById("suggested-suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions)
 

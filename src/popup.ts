@@ -1,12 +1,16 @@
-import {useData} from "./utils.js";
+import {getData} from "./utils.js";
 
-document.getElementById("goToOptions").addEventListener("click",
+document.getElementById("goToOptions")?.addEventListener("click",
     () => chrome.tabs.create({url: chrome.runtime.getURL("options.html")}));
 
 const popupTimerDiv = document.getElementById("popup-timer-div");
 
 
-useData(({blocking, reblockingAt}) => {
+getData().then(({blocking, reblockingAt}) => {
+    if (popupTimerDiv === null) {
+        console.log("Cannot find popup-timer-div");
+        return;
+    }
     if (!blocking) {
         const interval = setInterval(async () => {
             const timeLeft = reblockingAt - Date.now();

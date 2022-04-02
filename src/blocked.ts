@@ -1,8 +1,12 @@
-import {setData, useData} from "./utils.js";
+import {setData, getData} from "./utils.js";
 
-useData(data => {
+getData().then(data => {
 
     const timerDiv = document.getElementById("timer-div");
+    if (timerDiv === null) {
+        console.error("Couldn't find timer-div");
+        return;
+    }
 
     let timeSet = Date.now();
     let replacing = false;
@@ -20,13 +24,18 @@ useData(data => {
 
     function loadUnblocked() {
         const dest = new URL(window.location.href).searchParams.get("dest");
+        if (dest === null) {
+            console.error("Couldn't get 'dest' param from URL");
+            return;
+        }
         replacing = true;
         window.location.replace(dest);
     }
 
     window.addEventListener("blur", async () => {
-        const tab = await chrome.tabs.getCurrent();
-        setTimeout(() => chrome.tabs.remove(tab.id), 1);
+        const tabId = (await chrome.tabs.getCurrent()).id ?? -1;
+        if (tabId === -1) return;
+        setTimeout(() => chrome.tabs.remove(tabId), 1);
     });
 
     (document.getElementById("suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions;
