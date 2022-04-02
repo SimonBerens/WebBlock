@@ -14,6 +14,7 @@
     "postcss-import": "^14.1.0"
   },
   "scripts": {
-    "build": "swc src -D --out-dir=built"
+    "build": "swc src -D --out-dir=built",
+    "dev": "swc src -Dw --out-dir=built"
   }
 }
