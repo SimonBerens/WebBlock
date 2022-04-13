@@ -1,5 +1,4 @@
 .idea/
 extension.zip
-built/
-build.ps1
 node_modules
+dist/
