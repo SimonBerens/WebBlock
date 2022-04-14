@@ -1,10 +1,9 @@
 import {
     BlockedList,
-    Data,
     DEFAULT_COUNTDOWN_LENGTH_MINUTES,
     DEFAULT_REBLOCK_LENGTH_MINUTES,
-    setData,
-    getData
+    getData,
+    setData
 } from "./utils.js";
 
 async function setList(newList: BlockedList) {

@@ -1,26 +1,24 @@
-import {setData, getData} from "./utils.js";
+import {setData, getData, BlockedList} from "./utils.js";
 
+
+function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: BlockedList) {
+    return blockedList.some(blockedItem => (tab.url ?? '').indexOf(blockedItem.urlPrefix) === 0);
+}
 
 chrome.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === "reblock") {
-        await setData({...(await getData()), blocking: true})
-        let queryOptions = { active: true, currentWindow: true };
-        let [tab] = await chrome.tabs.query(queryOptions);
-        await blockUnblockTab(tab);
+        const data = await getData();
+        await setData({...data, blocking: true})
+        const tabs = await chrome.tabs.query({});
+        await chrome.tabs.remove(tabs.filter(tab => isTabOnBlockedList(tab, data.blockedList)).map(tab => tab.id ?? -1));
     }
 });
 
-
-
-const isPrefixOfURL = (url: string) => ((site: string) => url.indexOf(site) === 0);
-
 // todo rename func
-export const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
-    // todo rearrange/inline vars
-    const isPrefixOfTabURL = isPrefixOfURL(tab.url ?? '');
+const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
     const {blocking, blockedList} = await getData();
-    if (blocking && blockedList.some(blockedItem => isPrefixOfTabURL(blockedItem.urlPrefix))) {
+    if (blocking && isTabOnBlockedList(tab, blockedList)) {
         if (tab.id) chrome.tabs.update(tab.id, {url: redirect});
     }
 
