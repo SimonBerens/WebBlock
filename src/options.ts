@@ -19,7 +19,7 @@ getData().then(data => {
         const x = document.getElementById("countdown-minutes") as HTMLInputElement;
         x.value = data.countdownLengthMinutes.toString();
         x.addEventListener("blur", async () => {
-            const newCountdownLengthMinutes = parseInt(x.value);
+            const newCountdownLengthMinutes = parseFloat(x.value);
             if (isNaN(newCountdownLengthMinutes)) return;
             if (newCountdownLengthMinutes < 1) {
                 alert("Countdown must be at least 1 minute long");
@@ -32,7 +32,7 @@ getData().then(data => {
         const y = document.getElementById("reblock-minutes") as HTMLInputElement;
         y.value = data.reblockLengthMinutes.toString();
         y.addEventListener("blur", async () => {
-            const newReblockLengthMinutes = parseInt(y.value);
+            const newReblockLengthMinutes = parseFloat(y.value);
             if (isNaN(newReblockLengthMinutes)) return;
             if (newReblockLengthMinutes > 180) {
                 alert("Cannot unblock for more than 3 hours");
