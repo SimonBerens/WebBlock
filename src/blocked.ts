@@ -1,5 +1,7 @@
 import {setData, getData} from "./utils.js";
 
+if (!document.hasFocus()) close();
+
 getData().then(data => {
 
     const timerDiv = document.getElementById("timer-div");
