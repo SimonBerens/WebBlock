@@ -18,10 +18,10 @@ getData().then(({blocking, reblockingAt}) => {
                 .toISOString().substr(11, 8);
             if (timeLeft < 1000) {
                 clearInterval(interval);
-                popupTimerDiv.innerHTML = "blocking";
+                popupTimerDiv.innerHTML = "Blocking";
             }
         });
     } else {
-        popupTimerDiv.innerHTML = "blocking";
+        popupTimerDiv.innerHTML = "Blocking";
     }
 });
