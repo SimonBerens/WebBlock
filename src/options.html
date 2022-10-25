@@ -6,40 +6,59 @@
     <link rel="stylesheet" href="./options.css">
 </head>
 <body>
-<button id="block-button"> Start Blocking </button>
-
-<label for="countdown-minutes">Countdown length in minutes: </label>
-<input id="countdown-minutes" type="number">
-<br>
-
-<label for="reblock-minutes">Reblock length in minutes: </label>
-<input id="reblock-minutes" type="text">
-<br>
-
-<label for="suggested-actions">Suggested Actions</label>
-<br>
-<textarea id="suggested-actions"></textarea>
-
-<div id="add-to-blocked-list">
-    <input id="url-to-add" type="text">
-    <button id="add-to-blocked-list-button">Add</button>
+<div class="h-screen flex flex-col font-sans">
+    <div id="header" class="h-16 w-full flex flex-none flex-row px-8 items-center">
+        <div id="logo" class="text-3xl font-semibold"> WebBlock </div>
+        <div class="ml-auto text-xl font-medium underline decoration-blue-300">
+            <a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
+            <a class="pl-10" href="https://github.com/SimonBerens/WebBlock">Contribute</a>
+        </div>
+    </div>
+    <div id="main" class="flex-auto bg-[#F7F7F7]">
+        <div class="w-full mt-16 mb-32 text-center text-4xl font-semibold">
+            Wait for
+            <input id="countdown-seconds" class="font-mono w-20 bg-[#DEDEDE] font-semibold text-center"/>
+            seconds before unblocking, and then re-block in
+            <input id="reblock-minutes" class="font-mono w-12 bg-[#DEDEDE] font-semibold text-center"/>
+            minutes
+        </div>
+        <div id="double" class="flex flex-row px-40">
+            <div id="bsites" class="flex-1">
+                <div class="flex flex-row items-center h-24 mb-10">
+                    <div class="text-4xl font-bold">
+                        Blocked Sites
+                    </div>
+                    <button id="add-to-blocked-list-button"
+                            class="ml-auto h-14 rounded-lg flex flex-row items-center bg-[#9A170F] drop-shadow-lg">
+                        <img src="plus-circle.svg" alt="Add" class="p-3"/>
+                        <span class="text-2xl font-medium text-white ml-0 mr-0 pr-6"> Add Website </span>
+                    </button>
+                </div>
+                <ul id="blocked-list">
+                </ul>
+            </div>
+            <div class="w-20"></div>
+            <div id="motivation" class="flex-1">
+                <div class="flex flex-row items-center h-24 mb-10 text-4xl font-bold">
+                    <div class="">Motivation</div>
+                </div>
+                <textarea id="suggested-actions" class="w-full h-80 rounded-lg drop-shadow-lg"></textarea>
+            </div>
+        </div>
+    </div>
 </div>
-<br>
-
-
-<ul id="blocked-list">
-</ul>
 
 <template id="blocked-item-template">
-    <li>
-        <span class="blocked-url"></span>
+    <li class="mb-4 px-6 flex flex-row rounded-lg bg-white drop-shadow-lg h-16 flex flex-row items-center">
+        <div class="blocked-url text-2xl font-medium"></div>
+        <button class="ml-auto remove-blocked-url"> <img src="cancel.svg" alt="Cancel"/> </button>
     </li>
 </template>
 
-<br>
-<a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
-<br>
-<a href="https://github.com/SimonBerens/WebBlock">Contribute</a>
 <script type="module" src="./options.ts"></script>
 </body>
 </html>
+
+<!-- todo button wrap on small size-->
+<!-- todo newtab page text styling -->
+<!-- todo blockedsite editable -->

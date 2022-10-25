@@ -16,17 +16,17 @@ getData().then(data => {
     {
         // todo clean up variable names
 
-        const x = document.getElementById("countdown-minutes") as HTMLInputElement;
-        x.value = data.countdownLengthMinutes.toString();
+        const x = document.getElementById("countdown-seconds") as HTMLInputElement;
+        x.value = (data.countdownLengthMinutes * 60).toString();
         x.addEventListener("blur", async () => {
-            const newCountdownLengthMinutes = parseFloat(x.value);
-            if (isNaN(newCountdownLengthMinutes)) return;
-            if (newCountdownLengthMinutes < 1) {
-                alert("Countdown must be at least 1 minute long");
-                x.value = DEFAULT_COUNTDOWN_LENGTH_MINUTES.toString();
+            const newCountdownLengthSeconds = parseFloat(x.value);
+            if (isNaN(newCountdownLengthSeconds)) return;
+            if (newCountdownLengthSeconds < 30) {
+                alert("Countdown must be at least 30 seconds long");
+                x.value = (DEFAULT_COUNTDOWN_LENGTH_MINUTES * 60).toString();
                 return;
             }
-            await setData({...data, countdownLengthMinutes: newCountdownLengthMinutes});
+            await setData({...data, countdownLengthMinutes: newCountdownLengthSeconds/60});
         })
 
         const y = document.getElementById("reblock-minutes") as HTMLInputElement;
@@ -52,12 +52,9 @@ getData().then(data => {
 
         const blockedList = data.blockedList;
 
-        const url = document.getElementById("url-to-add") as HTMLInputElement;
         const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
-        addToBlockedListButton.addEventListener("click", async () => {
-                if (url.value !== "")
-                    await setList([...blockedList, {urlPrefix: url.value}])
-            }
+        addToBlockedListButton.addEventListener("click", () =>
+            setList([...blockedList, {urlPrefix: "https://www.example.com"}])
         );
 
         const domList = document.getElementById("blocked-list") as HTMLDivElement;
@@ -65,19 +62,14 @@ getData().then(data => {
 
         blockedList.forEach(blockedItem => {
             const bi = domBlockedItem.content.cloneNode(true) as DocumentFragment;
-            const bu = bi.querySelector(".blocked-url") as HTMLSpanElement;
+            const bu = bi.querySelector(".blocked-url") as HTMLDivElement;
+            const bb = bi.querySelector(".remove-blocked-url") as HTMLButtonElement;
             bu.innerHTML = blockedItem.urlPrefix;
-            bu.addEventListener("click", () =>
+            bb.addEventListener("click", () =>
                 setList(blockedList.filter(x => x !== blockedItem))
             );
 
             domList.appendChild(bi);
-        });
-
-        const blockButton = document.getElementById("block-button") as HTMLButtonElement;
-        blockButton.addEventListener("click", async () => {
-            await setData({...data, blocking: true});
-            await chrome.alarms.clear("reblock");
         });
     }
 });
