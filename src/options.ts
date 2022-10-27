@@ -6,9 +6,33 @@ import {
     setData
 } from "./utils.js";
 
-async function setList(newList: BlockedList) {
-    await setData({...(await getData()), blockedList: newList})
-    window.location.reload();
+async function renderList(blockedList: BlockedList) {
+    await setData({...(await getData()), blockedList})
+
+    const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
+    addToBlockedListButton.addEventListener("click", () =>
+        renderList([...blockedList, {urlPrefix: "https://www.example.com"}])
+    );
+
+    const domList = document.getElementById("blocked-list") as HTMLDivElement;
+    while (domList.firstChild) domList.removeChild(domList.firstChild);
+    const domBlockedItem = document.getElementById("blocked-item-template") as HTMLTemplateElement;
+
+    blockedList.forEach((blockedItem, i) => {
+        const bi = domBlockedItem.content.cloneNode(true) as DocumentFragment;
+        const bu = bi.querySelector(".blocked-url") as HTMLInputElement;
+        const bb = bi.querySelector(".remove-blocked-url") as HTMLButtonElement;
+        bu.value = blockedItem.urlPrefix;
+        bu.addEventListener("blur", () => {
+            blockedList[i].urlPrefix = bu.value;
+            renderList(blockedList);
+        })
+        bb.addEventListener("click", () =>
+            renderList(blockedList.filter(x => x !== blockedItem))
+        );
+
+        domList.appendChild(bi);
+    });
 }
 
 
@@ -47,28 +71,7 @@ getData().then(data => {
             await setData({...data, suggestedActions: newActions});
         })
 
-
-        const blockedList = data.blockedList;
-
-        const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
-        addToBlockedListButton.addEventListener("click", () =>
-            setList([...blockedList, {urlPrefix: "https://www.example.com"}])
-        );
-
-        const domList = document.getElementById("blocked-list") as HTMLDivElement;
-        const domBlockedItem = document.getElementById("blocked-item-template") as HTMLTemplateElement;
-
-        blockedList.forEach(blockedItem => {
-            const bi = domBlockedItem.content.cloneNode(true) as DocumentFragment;
-            const bu = bi.querySelector(".blocked-url") as HTMLDivElement;
-            const bb = bi.querySelector(".remove-blocked-url") as HTMLButtonElement;
-            bu.innerHTML = blockedItem.urlPrefix;
-            bb.addEventListener("click", () =>
-                setList(blockedList.filter(x => x !== blockedItem))
-            );
-
-            domList.appendChild(bi);
-        });
+        renderList(data.blockedList);
     }
 });
 
