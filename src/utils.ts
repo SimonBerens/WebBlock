@@ -20,7 +20,7 @@ export interface StoredData {
 export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
 export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
-const DEFAULT_SUGGESTED_ACTIONS  = `
+export const DEFAULT_SUGGESTED_ACTIONS  = `
 <ol id="my-list">
 <li><a href="https://google.com/"> REPLACE ME (this is a link) </a> </li>
 <li> REPLACE ME (normal element) </li>
