@@ -23,11 +23,16 @@ to remind yourself to stretch in that time.
 
 ### [Install](https://chrome.google.com/webstore/detail/webblock/jeahkphmdfbddenabgndnooheiciocka)
 
+### Develop
+```shell script
+pnpm install
+pnpm run dev
+```
+Now the `./dist/` folder can be used as an extension using Load Unpacked.
 
 ### Build
 ```shell script
 pnpm install
 pnpm run build
 ```
-Now the `./dist/` folder can be used as an extension, 
-either from Load Unpacked or publishing the zipped file to the Chrome Web Store 
+Now `./dist.zip` is ready for publishing.
