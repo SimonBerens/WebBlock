@@ -47,7 +47,7 @@ export const getData = async () => {
     const {data} = await chrome.storage.local.get(
         {
             data: {
-                blockedList: [],
+                blockedList: [{urlPrefix: "https://www.example.com"}],
                 blocking: true,
                 countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
                 reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
