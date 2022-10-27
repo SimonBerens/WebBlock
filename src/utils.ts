@@ -24,6 +24,8 @@ const DEFAULT_SUGGESTED_ACTIONS  = `
 <ol id="my-list">
 <li><a href="https://google.com/"> REPLACE ME (this is a link) </a> </li>
 <li> REPLACE ME (normal element) </li>
+<!-- EMBED YOUR FAVORITE WEBSITE LIKE SO 👇 -->
+<iframe src="https://curius.app/" height="500" width="1000"> </iframe>
 </ol>
 
 <style>
@@ -39,6 +41,10 @@ font-size: 2.25rem;
 a {
 text-decoration-line: underline;
 text-decoration-color: rgb(147 197 253);
+}
+
+iframe {
+margin: 0 auto;
 }
 </style>
 `;
