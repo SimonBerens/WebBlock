@@ -20,6 +20,29 @@ export interface StoredData {
 export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
 export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
+const DEFAULT_SUGGESTED_ACTIONS  = `
+<ol id="my-list">
+<li><a href="https://google.com/"> REPLACE ME (this is a link) </a> </li>
+<li> REPLACE ME (normal element) </li>
+</ol>
+
+<style>
+#my-list {
+height: 100vh;
+text-align: center;
+display: flex;
+flex-direction: column;
+justify-content: center;
+font-size: 2.25rem;
+}
+
+a {
+text-decoration-line: underline;
+text-decoration-color: rgb(147 197 253);
+}
+</style>
+`;
+
 export const getData = async () => {
     const {data} = await chrome.storage.local.get(
         {
@@ -29,7 +52,7 @@ export const getData = async () => {
                 countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
                 reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
                 reblockingAt: Date.now(),
-                suggestedActions: ""
+                suggestedActions: DEFAULT_SUGGESTED_ACTIONS
             }
         } as StoredData) as StoredData;
     return data;

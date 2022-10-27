@@ -14,7 +14,6 @@ chrome.alarms.onAlarm.addListener(async alarm => {
     }
 });
 
-// todo rename func
 const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
     const {blocking, blockedList} = await getData();

@@ -14,29 +14,27 @@ async function setList(newList: BlockedList) {
 
 getData().then(data => {
     {
-        // todo clean up variable names
-
-        const x = document.getElementById("countdown-seconds") as HTMLInputElement;
-        x.value = (data.countdownLengthMinutes * 60).toString();
-        x.addEventListener("blur", async () => {
-            const newCountdownLengthSeconds = parseFloat(x.value);
+        const countdownInput = document.getElementById("countdown-seconds") as HTMLInputElement;
+        countdownInput.value = (data.countdownLengthMinutes * 60).toString();
+        countdownInput.addEventListener("blur", async () => {
+            const newCountdownLengthSeconds = parseFloat(countdownInput.value);
             if (isNaN(newCountdownLengthSeconds)) return;
             if (newCountdownLengthSeconds < 30) {
                 alert("Countdown must be at least 30 seconds long");
-                x.value = (DEFAULT_COUNTDOWN_LENGTH_MINUTES * 60).toString();
+                countdownInput.value = (DEFAULT_COUNTDOWN_LENGTH_MINUTES * 60).toString();
                 return;
             }
             await setData({...data, countdownLengthMinutes: newCountdownLengthSeconds/60});
         })
 
-        const y = document.getElementById("reblock-minutes") as HTMLInputElement;
-        y.value = data.reblockLengthMinutes.toString();
-        y.addEventListener("blur", async () => {
-            const newReblockLengthMinutes = parseFloat(y.value);
+        const reblockInput = document.getElementById("reblock-minutes") as HTMLInputElement;
+        reblockInput.value = data.reblockLengthMinutes.toString();
+        reblockInput.addEventListener("blur", async () => {
+            const newReblockLengthMinutes = parseFloat(reblockInput.value);
             if (isNaN(newReblockLengthMinutes)) return;
             if (newReblockLengthMinutes > 180) {
                 alert("Cannot unblock for more than 3 hours");
-                y.value = DEFAULT_REBLOCK_LENGTH_MINUTES.toString();
+                reblockInput.value = DEFAULT_REBLOCK_LENGTH_MINUTES.toString();
                 return;
             }
             await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
