@@ -15,7 +15,7 @@ getData().then(data => {
     setInterval(async () => {
         const timeLeft = data.countdownLengthMinutes * 60 * 1000 - (Date.now() - timeSet);
         timerDiv.innerHTML = new Date(timeLeft)
-            .toISOString().substr(11, 8);
+            .toISOString().substring(11, 19);
         if (timeLeft < 1000) {
             chrome.alarms.create("reblock", {delayInMinutes: data.reblockLengthMinutes});
             const reblockAlarm = await chrome.alarms.get("reblock");
