@@ -39,3 +39,5 @@ chrome.tabs.onActivated.addListener(activeInfo =>
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
     blockUnblockTab(tab));
+
+chrome.runtime.setUninstallURL('https://dz0c2pw13zz.typeform.com/to/qY22xEZl');
