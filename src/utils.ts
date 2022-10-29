@@ -1,49 +1,69 @@
-import {blockUnblockTab} from "./block.js";
-
-export interface BlockedList {
-    name: string;
-    isBlocking: boolean;
-    enabledOnStartup: boolean;
-    customRedirect: string;
-    blockedSites: Array<string>;
+export interface BlockedItem {
+    urlPrefix: string
 }
 
-export interface BlockedListListRes {
-    blockedListList: {[listId: string]: BlockedList}
+export type BlockedList = BlockedItem[];
+
+export interface Data {
+    blockedList: BlockedList,
+    blocking: boolean,
+    countdownLengthMinutes: number,
+    reblockLengthMinutes: number,
+    reblockingAt: number,
+    suggestedActions: string
 }
 
-export const addEventListener = (id: string, event: string, func: EventListenerOrEventListenerObject): void =>
-    document.getElementById(id).addEventListener(event, func);
+export interface StoredData {
+    data: Data
+}
 
-export const addOnClick = (id: string, func: EventListenerOrEventListenerObject): void =>
-    addEventListener(id, "click", func);
+export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
+export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
-export const getFields = chrome.storage.sync.get.bind(chrome.storage.sync);
-export const setFields = chrome.storage.sync.set.bind(chrome.storage.sync);
+export const DEFAULT_SUGGESTED_ACTIONS  = `
+<ol id="my-list">
+<li><a href="https://google.com/"> REPLACE ME (this is a link) </a> </li>
+<li> REPLACE ME (normal element) </li>
+<!-- EMBED YOUR FAVORITE WEBSITE LIKE SO 👇 -->
+<iframe src="https://curius.app/" height="500" width="1000"> </iframe>
+</ol>
 
-export const getBlocked = (callback: (res: BlockedListListRes) => Promise<void>): void => {
-    getFields({blockedListList: {}}, callback);
-};
+<style>
+#my-list {
+height: 100vh;
+text-align: center;
+display: flex;
+flex-direction: column;
+justify-content: center;
+font-size: 2.25rem;
+}
 
-export const getThenSetBlocked = (modifyRes: (res: BlockedListListRes) => Promise<void>): void => {
-    getBlocked(async res => {
-        await modifyRes(res);
-        chrome.tabs.query({active: true}, tabs => tabs.forEach(blockUnblockTab));
-        setFields({blockedListList: res.blockedListList});
-    });
-    window.location.reload();
-};
+a {
+text-decoration-line: underline;
+text-decoration-color: rgb(147 197 253);
+}
 
+iframe {
+margin: 0 auto;
+}
+</style>
+`;
 
-export const getThenSetBlockedCallback = (modifyRes: (res: BlockedListListRes) => Promise<void>): () => void => {
-    return () => getThenSetBlocked(modifyRes);
-};
+export const getData = async () => {
+    const {data} = await chrome.storage.local.get(
+        {
+            data: {
+                blockedList: [{urlPrefix: "https://www.example.com"}],
+                blocking: true,
+                countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
+                reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
+                reblockingAt: Date.now(),
+                suggestedActions: DEFAULT_SUGGESTED_ACTIONS
+            }
+        } as StoredData) as StoredData;
+    return data;
+}
 
-export const isValidUrl = (potentialUrl: string) : boolean => {
-    try {
-        new URL(potentialUrl);
-        return true;
-    } catch (_) {
-        return false;
-    }
+export const setData = async (data: Data) => {
+    await chrome.storage.local.set({data: data});
 }

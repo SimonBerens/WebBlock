@@ -1,160 +1,77 @@
 import {
-    addOnClick,
-    getBlocked,
-    getThenSetBlocked,
-    getThenSetBlockedCallback,
-    isValidUrl,
+    BlockedList,
+    DEFAULT_COUNTDOWN_LENGTH_MINUTES,
+    DEFAULT_REBLOCK_LENGTH_MINUTES,
+    getData,
+    setData
 } from "./utils.js";
 
-// https://gist.github.com/jed/982883
-const uuid4 = (): string => {
-    // @ts-ignore
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+async function renderList(blockedList: BlockedList) {
+    await setData({...(await getData()), blockedList})
+
+    const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
+    addToBlockedListButton.addEventListener("click", () =>
+        renderList([...blockedList, {urlPrefix: "https://www.example.com"}])
     );
+
+    const domList = document.getElementById("blocked-list") as HTMLDivElement;
+    while (domList.firstChild) domList.removeChild(domList.firstChild);
+    const domBlockedItem = document.getElementById("blocked-item-template") as HTMLTemplateElement;
+
+    blockedList.forEach((blockedItem, i) => {
+        const bi = domBlockedItem.content.cloneNode(true) as DocumentFragment;
+        const bu = bi.querySelector(".blocked-url") as HTMLInputElement;
+        const bb = bi.querySelector(".remove-blocked-url") as HTMLButtonElement;
+        bu.value = blockedItem.urlPrefix;
+        bu.addEventListener("blur", () => {
+            blockedList[i].urlPrefix = bu.value;
+            renderList(blockedList);
+        })
+        bb.addEventListener("click", () =>
+            renderList(blockedList.filter(x => x !== blockedItem))
+        );
+
+        domList.appendChild(bi);
+    });
 }
 
-addOnClick("startAllBlocking", () => {
-    getThenSetBlocked(async res => {
-        for (const [id, blockedList] of Object.entries(res.blockedListList))
-            blockedList.isBlocking = true;
-    });
-    chrome.alarms.clearAll();
-});
 
-addOnClick("stopAllBlocking", () => {
-    getThenSetBlocked(async res => {
-        for (const [id, blockedList] of Object.entries(res.blockedListList))
-            blockedList.isBlocking = false;
-    });
-    chrome.alarms.clearAll();
-});
-
-
-addOnClick("addBlockedList", getThenSetBlockedCallback(async res => {
-    res.blockedListList[uuid4()] = {
-        name: "Click to Change Name",
-        isBlocking: true,
-        enabledOnStartup: true,
-        customRedirect: "",
-        blockedSites: []
-    };
-}))
-
-getBlocked(async res => {
-
-    const blockedListListContainer = document.getElementById("blockedListListContainer");
-
-    const blockedListTemplate = document.getElementById("blockedListTemplate") as HTMLTemplateElement;
-
-
-    for (const [listId, blockedList] of Object.entries(res.blockedListList)) {
-
-        const addToHTMLBlockedList = (list: HTMLUListElement, ...sites) => {
-            for (const site of sites) {
-                const item = document.createElement("li");
-                item.appendChild(document.createTextNode(site));
-                item.addEventListener("click", () => {
-                    getThenSetBlocked(async res => {
-                        const curList = res.blockedListList[listId].blockedSites;
-                        curList.splice(curList.indexOf(site), 1);
-                    });
-                    list.removeChild(item);
-                });
-                list.appendChild(item);
+getData().then(data => {
+    {
+        const countdownInput = document.getElementById("countdown-seconds") as HTMLInputElement;
+        countdownInput.value = (data.countdownLengthMinutes * 60).toString();
+        countdownInput.addEventListener("blur", async () => {
+            const newCountdownLengthSeconds = parseFloat(countdownInput.value);
+            if (isNaN(newCountdownLengthSeconds)) return;
+            if (newCountdownLengthSeconds < 30) {
+                alert("Countdown must be at least 30 seconds long");
+                countdownInput.value = (DEFAULT_COUNTDOWN_LENGTH_MINUTES * 60).toString();
+                return;
             }
-        };
+            await setData({...data, countdownLengthMinutes: newCountdownLengthSeconds/60});
+        })
 
-        const blockedListTemplateClone = blockedListTemplate.content.cloneNode(true) as DocumentFragment;
-
-        const name =
-            blockedListTemplateClone.querySelector(".name") as HTMLSpanElement;
-        name.innerHTML = blockedList.name;
-        name.addEventListener("blur", getThenSetBlockedCallback(async res => {
-            res.blockedListList[listId].name = name.innerText;
-        }));
-        name.addEventListener("keydown", ev => {
-            if (ev.key === "Enter")
-                name.blur();
-        });
-
-        const setBlockingButton =
-            blockedListTemplateClone.querySelector(".setBlockingButton") as HTMLButtonElement;
-        if (blockedList.isBlocking) {
-            setBlockingButton.innerText = "Stop Blocking";
-            setBlockingButton.style.backgroundColor = "red";
-        } else {
-            setBlockingButton.innerText = "Start Blocking";
-            setBlockingButton.style.backgroundColor = "green";
-        }
-        setBlockingButton.addEventListener("click", getThenSetBlockedCallback(async res => {
-            res.blockedListList[listId].isBlocking = !res.blockedListList[listId].isBlocking;
-            chrome.alarms.clear(listId);
-        }));
-
-        const enableOnStartupCheckbox =
-            blockedListTemplateClone.querySelector(".enableOnStartupCheckbox") as HTMLInputElement;
-        enableOnStartupCheckbox.checked = blockedList.enabledOnStartup;
-        enableOnStartupCheckbox.addEventListener("click", getThenSetBlockedCallback(async res => {
-            res.blockedListList[listId].enabledOnStartup = enableOnStartupCheckbox.checked;
-        }));
-
-        const customRedirectTextInput =
-            blockedListTemplateClone.querySelector(".customRedirectTextInput") as HTMLInputElement;
-        customRedirectTextInput.value = blockedList.customRedirect;
-        customRedirectTextInput.addEventListener("blur", getThenSetBlockedCallback(async res => {
-            res.blockedListList[listId].customRedirect = customRedirectTextInput.value;
-        }));
-        customRedirectTextInput.addEventListener("keydown", ev => {
-           if (ev.key === "Enter")
-               customRedirectTextInput.blur();
-        });
-
-        const importFromCsv =
-            blockedListTemplateClone.querySelector(".importFromCsv") as HTMLInputElement;
-
-        const blockedSites =
-            blockedListTemplateClone.querySelector(".blockedSites") as HTMLUListElement;
-        addToHTMLBlockedList(blockedSites, ...res.blockedListList[listId].blockedSites);
-
-        importFromCsv.addEventListener("change", getThenSetBlockedCallback(async res => {
-            for (const file of importFromCsv.files) {
-                const csvStr = await file.text();
-                const lines = csvStr.split(/\r\n|\n/);
-                const urls = [];
-                for (const line of lines)
-                    urls.push(...line.split(",").filter(url => url.length !== 0));
-                if (!urls.every(isValidUrl))
-                    alert("Some URLs were detected to be invalid, make sure URLs start with http[s]://")
-                else res.blockedListList[listId].blockedSites.push(...urls);
+        const reblockInput = document.getElementById("reblock-minutes") as HTMLInputElement;
+        reblockInput.value = data.reblockLengthMinutes.toString();
+        reblockInput.addEventListener("blur", async () => {
+            const newReblockLengthMinutes = parseFloat(reblockInput.value);
+            if (isNaN(newReblockLengthMinutes)) return;
+            if (newReblockLengthMinutes > 180) {
+                alert("Cannot unblock for more than 3 hours");
+                reblockInput.value = DEFAULT_REBLOCK_LENGTH_MINUTES.toString();
+                return;
             }
-        }));
+            await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
+        })
 
-        const addBlockedSiteInput =
-            blockedListTemplateClone.querySelector(".addBlockedSiteInput") as HTMLInputElement;
+        const suggestedActions = document.getElementById("suggested-actions") as HTMLTextAreaElement;
+        suggestedActions.value = data.suggestedActions;
+        suggestedActions.addEventListener("blur", async () => {
+            const newActions = suggestedActions.value;
+            await setData({...data, suggestedActions: newActions});
+        })
 
-        const addBlockedSiteButton =
-            blockedListTemplateClone.querySelector(".addBlockedSiteButton") as HTMLButtonElement;
-
-        addBlockedSiteInput.addEventListener("keyup", ev => {
-           if (ev.key === "Enter")
-               addBlockedSiteButton.click();
-        });
-
-        addBlockedSiteButton.addEventListener("click", getThenSetBlockedCallback(async res => {
-            const url = addBlockedSiteInput.value;
-            if (!isValidUrl(url))
-                alert("URL was detected to be invalid, make sure URLs start with http[s]://")
-            else res.blockedListList[listId].blockedSites.push(url);
-        }));
-
-        const deleteListButton =
-            blockedListTemplateClone.querySelector(".deleteListButton") as HTMLButtonElement;
-        deleteListButton.addEventListener("click", getThenSetBlockedCallback(async res => {
-            delete res.blockedListList[listId];
-        }));
-
-        blockedListListContainer.appendChild(blockedListTemplateClone);
-
+        renderList(data.blockedList);
     }
 });
+
