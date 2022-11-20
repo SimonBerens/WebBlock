@@ -50,7 +50,7 @@ margin: 0 auto;
 `;
 
 export const getData = async () => {
-    const {data} = await chrome.storage.local.get(
+    const {data} = await chrome.storage.sync.get(
         {
             data: {
                 blockedList: [{urlPrefix: "https://www.example.com"}],
@@ -65,5 +65,5 @@ export const getData = async () => {
 }
 
 export const setData = async (data: Data) => {
-    await chrome.storage.local.set({data: data});
+    await chrome.storage.sync.set({data: data});
 }
