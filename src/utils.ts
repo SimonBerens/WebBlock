@@ -7,6 +7,7 @@ export interface Data {
     reblockLengthMinutes: number,
     reblockingAt: number,
     motivationList: string[],
+    overrideNewtab: boolean,
 }
 
 export interface StoredData {
@@ -25,7 +26,8 @@ export const getData = async () => {
                 countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
                 reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
                 reblockingAt: Date.now(),
-                motivationList: ["Stretch", "Do a [pomodoro timer](https://pomofocus.io/)"]
+                motivationList: ["Stretch", "Do a [pomodoro timer](https://pomofocus.io/)"],
+                overrideNewtab: false,
             }
         } as StoredData) as StoredData;
     return data;

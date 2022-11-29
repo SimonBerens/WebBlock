@@ -18,8 +18,9 @@ chrome.alarms.onAlarm.addListener(async alarm => {
 });
 
 const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
+    const {blocking, blockedList, overrideNewtab} = await getData();
+    if (tab.url === 'chrome://newtab/' && overrideNewtab && tab.id) chrome.tabs.update(tab.id, {url: chrome.runtime.getURL("/suggested.html")});
     let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
-    const {blocking, blockedList} = await getData();
     if (blocking && isTabOnBlockedList(tab, blockedList)) {
         if (tab.id) chrome.tabs.update(tab.id, {url: redirect});
     }

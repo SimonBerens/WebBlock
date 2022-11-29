@@ -92,6 +92,12 @@ getData().then(data => {
             await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
         })
 
+        const override = document.getElementById('override-newtab') as HTMLInputElement;
+        override.checked = data.overrideNewtab;
+        override.addEventListener('change', () => {
+            setData({...data, overrideNewtab: override.checked});
+        })
+
         renderBlockedList(data.blockedList);
         renderMotivationList(data.motivationList);
     }
