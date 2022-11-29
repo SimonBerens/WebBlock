@@ -1,4 +1,4 @@
-import {setData, getData} from "./utils.js";
+import {setData, getData, renderMotivationHtml} from "./utils.js";
 
 if (!document.hasFocus()) close();
 
@@ -39,6 +39,5 @@ getData().then(data => {
         if (tabId === -1) return;
         setTimeout(() => chrome.tabs.remove(tabId), 1);
     });
-
-    (document.getElementById("suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions;
+    renderMotivationHtml(data.motivationList, document.getElementById("suggested-actions-display") as HTMLDivElement);
 });

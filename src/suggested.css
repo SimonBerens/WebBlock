@@ -3,3 +3,17 @@
 @tailwind utilities;
 
 input, select, textarea, button {font-family:inherit; font-weight: inherit;}
+
+#suggested-actions-display {
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 2.25rem;
+}
+
+a {
+    text-decoration-line: underline;
+    text-decoration-color: rgb(147 197 253);
+}

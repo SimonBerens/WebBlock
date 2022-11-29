@@ -1,37 +1,65 @@
 import {
-    BlockedList,
     DEFAULT_COUNTDOWN_LENGTH_MINUTES,
     DEFAULT_REBLOCK_LENGTH_MINUTES,
     getData,
     setData
 } from "./utils.js";
 
-async function renderList(blockedList: BlockedList) {
+async function renderBlockedList(blockedList: string[]) {
     await setData({...(await getData()), blockedList})
 
     const addToBlockedListButton = document.getElementById("add-to-blocked-list-button") as HTMLButtonElement;
     addToBlockedListButton.addEventListener("click", () =>
-        renderList([...blockedList, {urlPrefix: "https://www.example.com"}])
+        renderBlockedList([...blockedList, "https://www.example.com"])
     );
 
     const domList = document.getElementById("blocked-list") as HTMLDivElement;
     while (domList.firstChild) domList.removeChild(domList.firstChild);
-    const domBlockedItem = document.getElementById("blocked-item-template") as HTMLTemplateElement;
+    const domBlockedItem = document.getElementById("list-item-template") as HTMLTemplateElement;
 
     blockedList.forEach((blockedItem, i) => {
         const bi = domBlockedItem.content.cloneNode(true) as DocumentFragment;
-        const bu = bi.querySelector(".blocked-url") as HTMLInputElement;
-        const bb = bi.querySelector(".remove-blocked-url") as HTMLButtonElement;
-        bu.value = blockedItem.urlPrefix;
+        const bu = bi.querySelector(".list-input") as HTMLInputElement;
+        const bb = bi.querySelector(".remove-list-input") as HTMLButtonElement;
+        bu.value = blockedItem;
         bu.addEventListener("blur", () => {
-            blockedList[i].urlPrefix = bu.value;
-            renderList(blockedList);
+            blockedList[i] = bu.value;
+            renderBlockedList(blockedList);
         })
         bb.addEventListener("click", () =>
-            renderList(blockedList.filter(x => x !== blockedItem))
+            renderBlockedList(blockedList.filter(x => x !== blockedItem))
         );
 
         domList.appendChild(bi);
+    });
+}
+
+async function renderMotivationList(motivationList: string[]) {
+    await setData({...(await getData()), motivationList})
+
+    const addToBlockedListButton = document.getElementById("add-to-motivation-list-button") as HTMLButtonElement;
+    addToBlockedListButton.addEventListener("click", () =>
+        renderBlockedList([...motivationList, "Be Productive!"])
+    );
+
+    const domList = document.getElementById("motivation-list") as HTMLDivElement;
+    while (domList.firstChild) domList.removeChild(domList.firstChild);
+    const domMotivationItem = document.getElementById("list-item-template") as HTMLTemplateElement;
+
+    motivationList.forEach((motivationItem, i) => {
+        const mi = domMotivationItem.content.cloneNode(true) as DocumentFragment;
+        const mu = mi.querySelector(".list-input") as HTMLInputElement;
+        const mb = mi.querySelector(".remove-list-input") as HTMLButtonElement;
+        mu.value = motivationItem;
+        mu.addEventListener("blur", () => {
+            motivationList[i] = mu.value;
+            renderMotivationList(motivationList);
+        })
+        mb.addEventListener("click", () =>
+            renderMotivationList(motivationList.filter(x => x !== motivationItem))
+        );
+
+        domList.appendChild(mi);
     });
 }
 
@@ -64,14 +92,8 @@ getData().then(data => {
             await setData({...data, reblockLengthMinutes: newReblockLengthMinutes});
         })
 
-        const suggestedActions = document.getElementById("suggested-actions") as HTMLTextAreaElement;
-        suggestedActions.value = data.suggestedActions;
-        suggestedActions.addEventListener("blur", async () => {
-            const newActions = suggestedActions.value;
-            await setData({...data, suggestedActions: newActions});
-        })
-
-        renderList(data.blockedList);
+        renderBlockedList(data.blockedList);
+        renderMotivationList(data.motivationList);
     }
 });
 

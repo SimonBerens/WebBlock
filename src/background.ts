@@ -1,15 +1,11 @@
 import {
     setData,
-    getData,
-    BlockedList,
-    DEFAULT_SUGGESTED_ACTIONS,
-    DEFAULT_REBLOCK_LENGTH_MINUTES,
-    DEFAULT_COUNTDOWN_LENGTH_MINUTES
+    getData
 } from "./utils.js";
 
 
-function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: BlockedList) {
-    return blockedList.some(blockedItem => (tab.url ?? '').indexOf(blockedItem.urlPrefix) === 0);
+function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: string[]) {
+    return blockedList.some(blockedItem => (tab.url ?? '').indexOf(blockedItem) === 0);
 }
 
 chrome.alarms.onAlarm.addListener(async alarm => {
@@ -47,20 +43,4 @@ chrome.tabs.onActivated.addListener(activeInfo =>
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
     blockUnblockTab(tab));
 
-chrome.runtime.setUninstallURL('https://dz0c2pw13zz.typeform.com/to/qY22xEZl');
-
-chrome.runtime.onInstalled.addListener(async details => {
-    if (details.previousVersion === "2.0.3") {
-        const blockedListListRes = await chrome.storage.local.get({blockedListList: {}});
-        const newBlockedSites = Object.entries(blockedListListRes).flatMap(([, {blockedSites}]) => blockedSites)
-            .map(blockedSite => ({urlPrefix: blockedSite}));
-        setData({
-            blockedList: newBlockedSites,
-            blocking: true,
-            reblockingAt: Date.now(),
-            suggestedActions: DEFAULT_SUGGESTED_ACTIONS,
-            reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
-            countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES
-        })
-    }
-});
+chrome.runtime.setUninstallURL('https://forms.gle/k1nGBymLgFL7R5vZ6');

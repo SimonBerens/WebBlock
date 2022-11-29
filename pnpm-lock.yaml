@@ -3,13 +3,19 @@ lockfileVersion: 5.4
 specifiers:
   '@tsconfig/recommended': ^1.0.1
   '@types/chrome': ^0.0.180
+  '@types/marked': ^4.0.7
   '@types/node': ^17.0.24
   autoprefixer: ^10.4.4
   bestzip: ^2.2.1
+  marked: ^4.2.3
   postcss: ^8.4.12
   postcss-cli: ^9.1.0
   tailwindcss: ^3.0.24
   vite: ^2.9.5
+
+dependencies:
+  '@types/marked': 4.0.7
+  marked: 4.2.3
 
 devDependencies:
   '@tsconfig/recommended': 1.0.1
@@ -69,6 +75,10 @@ packages:
   /@types/har-format/1.2.8:
     resolution: {integrity: sha512-OP6L9VuZNdskgNN3zFQQ54ceYD8OLq5IbqO4VK91ORLfOm7WdT/CiT/pHEBSQEqCInJ2y3O6iCm/zGtPElpgJQ==}
     dev: true
+
+  /@types/marked/4.0.7:
+    resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}
+    dev: false
 
   /@types/node/17.0.24:
     resolution: {integrity: sha512-aveCYRQbgTH9Pssp1voEP7HiuWlD2jW2BO56w+bVrJn04i61yh6mRfoKO6hEYQD9vF+W8Chkwc6j1M36uPkx4g==}
@@ -800,6 +810,12 @@ packages:
   /lodash.union/4.6.0:
     resolution: {integrity: sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=}
     dev: true
+
+  /marked/4.2.3:
+    resolution: {integrity: sha512-slWRdJkbTZ+PjkyJnE30Uid64eHwbwa1Q25INCAYfZlK4o6ylagBy/Le9eWntqJFoFT93ikUKMv47GZ4gTwHkw==}
+    engines: {node: '>= 12'}
+    hasBin: true
+    dev: false
 
   /merge2/1.4.1:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}

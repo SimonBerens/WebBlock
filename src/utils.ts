@@ -1,16 +1,12 @@
-export interface BlockedItem {
-    urlPrefix: string
-}
-
-export type BlockedList = BlockedItem[];
+import {marked} from "marked";
 
 export interface Data {
-    blockedList: BlockedList,
+    blockedList: string[],
     blocking: boolean,
     countdownLengthMinutes: number,
     reblockLengthMinutes: number,
     reblockingAt: number,
-    suggestedActions: string
+    motivationList: string[],
 }
 
 export interface StoredData {
@@ -20,45 +16,16 @@ export interface StoredData {
 export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
 export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
-export const DEFAULT_SUGGESTED_ACTIONS  = `
-<ol id="my-list">
-<li><a href="https://google.com/"> REPLACE ME (this is a link) </a> </li>
-<li> REPLACE ME (normal element) </li>
-<!-- EMBED YOUR FAVORITE WEBSITE LIKE SO 👇 -->
-<iframe src="https://curius.app/" height="500" width="1000"> </iframe>
-</ol>
-
-<style>
-#my-list {
-height: 100vh;
-text-align: center;
-display: flex;
-flex-direction: column;
-justify-content: center;
-font-size: 2.25rem;
-}
-
-a {
-text-decoration-line: underline;
-text-decoration-color: rgb(147 197 253);
-}
-
-iframe {
-margin: 0 auto;
-}
-</style>
-`;
-
 export const getData = async () => {
     const {data} = await chrome.storage.sync.get(
         {
             data: {
-                blockedList: [{urlPrefix: "https://www.example.com"}],
+                blockedList: ["https://www.example.com"],
                 blocking: true,
                 countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
                 reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
                 reblockingAt: Date.now(),
-                suggestedActions: DEFAULT_SUGGESTED_ACTIONS
+                motivationList: ["Stretch", "Do a [pomodoro timer](https://pomofocus.io/)"]
             }
         } as StoredData) as StoredData;
     return data;
@@ -66,4 +33,16 @@ export const getData = async () => {
 
 export const setData = async (data: Data) => {
     await chrome.storage.sync.set({data: data});
+}
+
+const renderMotivationItem = (raw: string, parent: HTMLUListElement) => {
+    const li = document.createElement('li');
+    li.innerHTML = marked.parse(raw)
+    parent.appendChild(li);
+}
+
+export const renderMotivationHtml = (motivationList: string[], div: HTMLDivElement) => {
+    const ul = document.createElement('ul');
+    motivationList.forEach(mi => renderMotivationItem(mi, ul))
+    div.appendChild(ul);
 }

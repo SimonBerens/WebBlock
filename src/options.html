@@ -9,9 +9,9 @@
 <div class="h-screen flex flex-col font-sans">
     <div id="header" class="h-16 w-full flex flex-none flex-row px-8 items-center">
         <div id="logo" class="text-3xl font-semibold"> WebBlock </div>
-        <div class="ml-auto text-xl font-medium underline decoration-blue-300">
-            <a href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
-            <a class="pl-10" href="https://github.com/SimonBerens/WebBlock">Contribute</a>
+        <div class="ml-auto text-xl font-medium decoration-blue-300">
+            <a class="underline" href="https://github.com/SimonBerens/WebBlock/issues">Report a Bug</a>
+            <a class="underline pl-10" href="https://github.com/SimonBerens/WebBlock">Contribute</a>
         </div>
     </div>
     <div id="main" class="flex-auto bg-[#F7F7F7]">
@@ -39,21 +39,29 @@
                 <div class="text-base text-gray-600 font-sans font-semibold tracking-wide"> WEBBLOCK WILL BLOCK ANYTHING WITH THE ABOVE PREFIXES </div>
             </div>
             <div class="md:w-10 2xl:w-20"></div>
-            <div id="motivation" class="flex-1 bg-white rounded-lg pt-10 md:px-10 2xl:px-20 drop-shadow-xl">
-                <div class="flex flex-row items-center h-24 mb-10 text-4xl font-bold">
-                    <div class="">Motivation</div>
+            <div id="motivations" class="flex-1 bg-white rounded-lg py-10 md:px-10 2xl:px-20 drop-shadow-xl">
+                <div class="flex flex-row items-center h-24 mb-10">
+                    <div class="text-4xl font-bold">
+                        Motivation
+                    </div>
+                    <button id="add-to-motivation-list-button"
+                            class="ml-auto h-14 rounded-lg flex flex-row items-center bg-[#9A170F] drop-shadow-lg">
+                        <img src="plus-circle.svg" alt="Add" class="p-3"/>
+                        <span class="text-2xl font-medium text-white ml-0 mr-0 pr-6"> Add Motivation </span>
+                    </button>
                 </div>
-                <textarea id="suggested-actions" class="p-6 w-full h-[46rem] rounded-lg drop-shadow-lg text-lg font-mono font-medium border-[#a6a6a6] border"></textarea>
-                <div class="text-base text-gray-600 font-sans font-semibold tracking-wide"> THIS HTML IS WHAT WILL BE DISPLAYED IN YOUR NEWTAB PAGE </div>
+                <ul id="motivation-list">
+                </ul>
+                <div class="text-base text-gray-600 font-sans font-semibold tracking-wide"> USE <a class="underline decoration-blue-300" href="https://commonmark.org/help/">MARKDOWN</a> FOR LINKS </div>
             </div>
         </div>
     </div>
 </div>
 
-<template id="blocked-item-template">
+<template id="list-item-template">
     <li class="mb-4 px-6 flex flex-row rounded-lg bg-white drop-shadow-lg h-16 flex flex-row items-center border-[#a6a6a6] border">
-        <input class="blocked-url text-2xl font-medium w-4/5 focus:bg-[#ebebeb]"/>
-        <button class="ml-auto remove-blocked-url">
+        <input class="list-input text-2xl font-medium w-4/5 focus:bg-[#ebebeb]"/>
+        <button class="ml-auto remove-list-input">
             <svg class="fill-[#A3A3A3] hover:fill-[#9A170F]" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15 0C6.705 0 0 6.705 0 15C0 23.295 6.705 30 15 30C23.295 30 30 23.295 30 15C30 6.705 23.295 0 15 0ZM15 27C8.385 27 3 21.615 3 15C3 8.385 8.385 3 15 3C21.615 3 27 8.385 27 15C27 21.615 21.615 27 15 27ZM20.385 7.5L15 12.885L9.615 7.5L7.5 9.615L12.885 15L7.5 20.385L9.615 22.5L15 17.115L20.385 22.5L22.5 20.385L17.115 15L22.5 9.615L20.385 7.5Z"/>
             </svg>

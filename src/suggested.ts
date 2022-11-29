@@ -1,4 +1,4 @@
-import {getData} from "./utils.js";
+import {getData, renderMotivationHtml} from "./utils.js";
 
-getData().then(data => (document.getElementById("suggested-suggested-actions-display") as HTMLDivElement).innerHTML = data.suggestedActions)
+getData().then(data => renderMotivationHtml(data.motivationList, document.getElementById("suggested-actions-display") as HTMLDivElement))
 
