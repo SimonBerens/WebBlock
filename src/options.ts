@@ -39,7 +39,7 @@ async function renderMotivationList(motivationList: string[]) {
 
     const addToBlockedListButton = document.getElementById("add-to-motivation-list-button") as HTMLButtonElement;
     addToBlockedListButton.addEventListener("click", () =>
-        renderBlockedList([...motivationList, "Be Productive!"])
+        renderMotivationList([...motivationList, "Be Productive!"])
     );
 
     const domList = document.getElementById("motivation-list") as HTMLDivElement;

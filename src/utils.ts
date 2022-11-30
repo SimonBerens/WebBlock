@@ -8,6 +8,7 @@ export interface Data {
     reblockingAt: number,
     motivationList: string[],
     overrideNewtab: boolean,
+    lastUpdate: number
 }
 
 export interface StoredData {
@@ -17,24 +18,27 @@ export interface StoredData {
 export const DEFAULT_COUNTDOWN_LENGTH_MINUTES = 2;
 export const DEFAULT_REBLOCK_LENGTH_MINUTES = 60;
 
-export const getData = async () => {
-    const {data} = await chrome.storage.sync.get(
-        {
-            data: {
-                blockedList: ["https://www.example.com"],
-                blocking: true,
-                countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
-                reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
-                reblockingAt: Date.now(),
-                motivationList: ["Stretch", "Do a [pomodoro timer](https://pomofocus.io/)"],
-                overrideNewtab: false,
-            }
-        } as StoredData) as StoredData;
+export const DEFAULT_STORED_DATA: StoredData = {
+    data: {
+        blockedList: ["https://www.example.com"],
+        blocking: true,
+        countdownLengthMinutes: DEFAULT_COUNTDOWN_LENGTH_MINUTES,
+        reblockLengthMinutes: DEFAULT_REBLOCK_LENGTH_MINUTES,
+        reblockingAt: Date.now(),
+        motivationList: ["Stretch", "Do a [pomodoro timer](https://pomofocus.io/)"],
+        overrideNewtab: false,
+        lastUpdate: 0
+    }
+};
+
+export const getData = async (sync: boolean = false) => {
+    const {data} = await (sync ? chrome.storage.sync : chrome.storage.local).get(DEFAULT_STORED_DATA) as StoredData;
     return data;
 }
 
-export const setData = async (data: Data) => {
-    await chrome.storage.sync.set({data: data});
+export const setData = async (data: Data, sync: boolean = false, update: boolean = true) => {
+    if (update) data.lastUpdate = Date.now();
+    await (sync ? chrome.storage.sync : chrome.storage.local).set({data: data});
 }
 
 const renderMotivationItem = (raw: string, parent: HTMLUListElement) => {

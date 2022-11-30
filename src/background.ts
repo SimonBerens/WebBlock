@@ -1,6 +1,6 @@
 import {
     setData,
-    getData
+    getData, StoredData
 } from "./utils.js";
 
 
@@ -28,7 +28,7 @@ const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
 };
 
 const blockOnExtensionStartup = async () => {
-    setData({...(await getData()), blocking: true});
+    setData({...(await getData()), blocking: true}, false, false);
 };
 
 
@@ -45,3 +45,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
     blockUnblockTab(tab));
 
 chrome.runtime.setUninstallURL('https://forms.gle/k1nGBymLgFL7R5vZ6');
+
+async function syncStuff() {
+    const syncData = await getData(true);
+    const curData = await getData();
+    if (curData.lastUpdate < syncData.lastUpdate) {
+        setData(syncData)
+    } else {
+        setData(curData, true)
+    }
+}
+
+chrome.alarms.onAlarm.addListener(async alarm => {
+    if (alarm.name === 'syncAlarm') await syncStuff()
+})
+
+chrome.alarms.create('syncAlarm', {
+    delayInMinutes: 1,
+    periodInMinutes: 1
+})
+
+syncStuff()
