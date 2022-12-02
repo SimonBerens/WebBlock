@@ -1,8 +1,15 @@
-import {
-    setData,
-    getData, StoredData
-} from "./utils.js";
+import {getData, setData} from "./utils.js";
 
+
+async function syncStuff() {
+    const syncData = await getData(true);
+    const curData = await getData();
+    if (curData.lastUpdate < syncData.lastUpdate) {
+        setData(syncData)
+    } else {
+        setData(curData, true)
+    }
+}
 
 function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: string[]) {
     return blockedList.some(blockedItem => (tab.url ?? '').indexOf(blockedItem) === 0);
@@ -11,10 +18,11 @@ function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: string[]) {
 chrome.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === "reblock") {
         const data = await getData();
-        await setData({...data, blocking: true})
+        await setData({...data, blocking: true}, true);
         const tabs = await chrome.tabs.query({});
         await chrome.tabs.remove(tabs.filter(tab => isTabOnBlockedList(tab, data.blockedList)).map(tab => tab.id ?? -1));
     }
+    if (alarm.name === 'syncAlarm') await syncStuff()
 });
 
 const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
@@ -28,7 +36,8 @@ const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
 };
 
 const blockOnExtensionStartup = async () => {
-    setData({...(await getData()), blocking: true}, false, false);
+    syncStuff();
+    setData({...(await getData()), blocking: true}, false);
 };
 
 
@@ -46,23 +55,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
 
 chrome.runtime.setUninstallURL('https://forms.gle/k1nGBymLgFL7R5vZ6');
 
-async function syncStuff() {
-    const syncData = await getData(true);
-    const curData = await getData();
-    if (curData.lastUpdate < syncData.lastUpdate) {
-        setData(syncData)
-    } else {
-        setData(curData, true)
-    }
-}
-
-chrome.alarms.onAlarm.addListener(async alarm => {
-    if (alarm.name === 'syncAlarm') await syncStuff()
-})
-
 chrome.alarms.create('syncAlarm', {
     delayInMinutes: 1,
     periodInMinutes: 1
 })
-
-syncStuff()

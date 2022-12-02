@@ -36,9 +36,10 @@ export const getData = async (sync: boolean = false) => {
     return data;
 }
 
-export const setData = async (data: Data, sync: boolean = false, update: boolean = true) => {
-    if (update) data.lastUpdate = Date.now();
-    await (sync ? chrome.storage.sync : chrome.storage.local).set({data: data});
+export const setData = async (data: Data, sync: boolean = false) => {
+    data.lastUpdate = Date.now();
+    chrome.storage.local.set({data});
+    if (sync) chrome.storage.sync.set({data});
 }
 
 const renderMotivationItem = (raw: string, parent: HTMLUListElement) => {
