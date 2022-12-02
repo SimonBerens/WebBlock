@@ -37,7 +37,7 @@ const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
 
 const blockOnExtensionStartup = async () => {
     syncStuff();
-    setData({...(await getData()), blocking: true}, false);
+    setData({...(await getData()), blocking: true}, true);
 };
 
 
