@@ -5,7 +5,7 @@ async function syncStuff() {
     const syncData = await getData(true);
     const curData = await getData();
     if (curData.lastUpdate < syncData.lastUpdate) {
-        setData(syncData)
+        setData({...syncData, blocking: curData.blocking, reblockingAt: curData.reblockingAt})
     } else {
         setData(curData, true)
     }
@@ -18,7 +18,7 @@ function isTabOnBlockedList(tab: chrome.tabs.Tab, blockedList: string[]) {
 chrome.alarms.onAlarm.addListener(async alarm => {
     if (alarm.name === "reblock") {
         const data = await getData();
-        await setData({...data, blocking: true}, true);
+        await setData({...data, blocking: true});
         const tabs = await chrome.tabs.query({});
         await chrome.tabs.remove(tabs.filter(tab => isTabOnBlockedList(tab, data.blockedList)).map(tab => tab.id ?? -1));
     }
@@ -37,7 +37,7 @@ const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
 
 const blockOnExtensionStartup = async () => {
     syncStuff();
-    setData({...(await getData()), blocking: true}, true);
+    setData({...(await getData()), blocking: true});
 };
 
 
