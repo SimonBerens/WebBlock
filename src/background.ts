@@ -4,10 +4,10 @@ import {getData, setData} from "./utils.js";
 async function syncStuff() {
     const syncData = await getData(true);
     const curData = await getData();
-    if (curData.lastUpdate < syncData.lastUpdate) {
-        setData({...syncData, blocking: curData.blocking, reblockingAt: curData.reblockingAt})
+    if (curData.lastUpdate + 10_000 < syncData.lastUpdate) {
+        await setData({...syncData, blocking: curData.blocking, reblockingAt: curData.reblockingAt})
     } else {
-        setData(curData, true)
+        await setData(curData, true)
     }
 }
 
@@ -21,23 +21,24 @@ chrome.alarms.onAlarm.addListener(async alarm => {
         await setData({...data, blocking: true});
         const tabs = await chrome.tabs.query({});
         await chrome.tabs.remove(tabs.filter(tab => isTabOnBlockedList(tab, data.blockedList)).map(tab => tab.id ?? -1));
-    }
-    if (alarm.name === 'syncAlarm') await syncStuff()
+    } else if (alarm.name === 'syncAlarm') await syncStuff();
 });
 
 const blockUnblockTab = async (tab: chrome.tabs.Tab) => {
     const {blocking, blockedList, overrideNewtab} = await getData();
-    if (tab.url === 'chrome://newtab/' && overrideNewtab && tab.id) chrome.tabs.update(tab.id, {url: chrome.runtime.getURL("/suggested.html")});
-    let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
-    if (blocking && isTabOnBlockedList(tab, blockedList)) {
-        if (tab.id) chrome.tabs.update(tab.id, {url: redirect});
+    if (tab.url === 'chrome://newtab/' && overrideNewtab && tab.id) {
+        await chrome.tabs.update(tab.id, {url: chrome.runtime.getURL("/suggested.html")});
+        return;
     }
+    let redirect = `${chrome.runtime.getURL("/blocked.html")}?dest=${tab.url}`;
+    if (blocking && isTabOnBlockedList(tab, blockedList) && tab.id)
+        await chrome.tabs.update(tab.id, {url: redirect});
 
 };
 
 const blockOnExtensionStartup = async () => {
-    syncStuff();
-    setData({...(await getData()), blocking: true});
+    await syncStuff();
+    await setData({...(await getData()), blocking: true});
 };
 
 
