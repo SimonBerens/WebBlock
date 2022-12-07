@@ -12,7 +12,7 @@ getData().then(data => {
 
     let timeSet = Date.now();
     let replacing = false;
-    setInterval(async () => {
+    const interval = setInterval(async () => {
         const timeLeft = data.countdownLengthMinutes * 60 * 1000 - (Date.now() - timeSet);
         timerDiv.innerHTML = new Date(timeLeft)
             .toISOString().substring(11, 19);
@@ -20,6 +20,7 @@ getData().then(data => {
             chrome.alarms.create("reblock", {delayInMinutes: data.reblockLengthMinutes});
             const reblockAlarm = await chrome.alarms.get("reblock");
             await setData({...data, reblockingAt: reblockAlarm.scheduledTime, blocking: false})
+            clearInterval(interval);
             loadUnblocked();
         }
     });
