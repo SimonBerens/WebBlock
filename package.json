@@ -5,7 +5,7 @@
     "@types/node": "^17.0.24",
     "autoprefixer": "^10.4.4",
     "bestzip": "^2.2.1",
-    "postcss": "^8.4.12",
+    "postcss": "^8.4.31",
     "postcss-cli": "^9.1.0",
     "tailwindcss": "^3.0.24",
     "vite": "^2.9.5"
